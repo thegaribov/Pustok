@@ -1,4 +1,4 @@
-﻿@model List<Pustok.Database.DomainModels.Product>
+﻿@model List<Product>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,11 +11,11 @@
 
     <div class="container">
         <h2>Products</h2>
-        <a class="btn btn-success" href="~/admin/ProductAdd">New Product</a>
+        <a class="btn btn-success">New Product</a>
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>#</th>
                     <th>Name</th>
                     <th>Price</th>
                     <th>Rating</th>
@@ -34,8 +34,8 @@
                         <td>$@product.Price</td>
                         <td>@product.Rating</td>
                         <td>
-                            <button class="btn btn-warning">Edit</button>
-                            <button class="btn btn-danger">Remove</button>
+                            <a href="~/admin/productedit?id=@product.Id" class="btn btn-warning">Edit</a>
+                            <a href="~/admin/DeleteProduct?id=@product.Id" class="btn btn-danger">Remove</a>
                         </td>
                     </tr>
 

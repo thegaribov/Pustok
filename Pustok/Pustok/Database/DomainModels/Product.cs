@@ -4,12 +4,12 @@
     {
         public Product()
         {
-
+            Id = ++DbContext._productId;
         }
 
-        public Product(int ıd, string name, decimal price, int rating)
+        public Product(string name, decimal price, int rating)
         {
-            Id = ıd;
+            Id = ++DbContext._productId;
             Name = name;
             Price = price;
             Rating = rating;
