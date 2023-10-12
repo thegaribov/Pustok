@@ -5,9 +5,9 @@ namespace Pustok.Database.DomainModels
     public class Product
     {
         public Product()
+            : this(default, default, default)
         {
-            Id = ++DbContext._productId;
-            CreatedAt = DateTime.Now;
+
         }
 
         public Product(string name, decimal price, int rating)
@@ -24,7 +24,7 @@ namespace Pustok.Database.DomainModels
         public decimal Price { get; set; }
         public int Rating { get; set; }
 
-        public DateTime CreatedAt { get; set; } 
+        public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
 }
