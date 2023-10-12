@@ -1,10 +1,13 @@
-﻿namespace Pustok.Database.DomainModels
+﻿using System;
+
+namespace Pustok.Database.DomainModels
 {
     public class Product
     {
         public Product()
         {
             Id = ++DbContext._productId;
+            CreatedAt = DateTime.Now;
         }
 
         public Product(string name, decimal price, int rating)
@@ -13,11 +16,15 @@
             Name = name;
             Price = price;
             Rating = rating;
+            CreatedAt = DateTime.Now;
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
         public int Rating { get; set; }
+
+        public DateTime CreatedAt { get; set; } 
+        public DateTime UpdatedAt { get; set; }
     }
 }

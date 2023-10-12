@@ -2,6 +2,7 @@
 using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.ViewModels;
+using System;
 using System.Linq;
 
 namespace Pustok.Admin
@@ -53,6 +54,7 @@ namespace Pustok.Admin
 
             product.Price = model.Price;
             product.Rating = model.Rating;
+            product.UpdatedAt = DateTime.Now;
 
             return RedirectToAction("Products");
         }
