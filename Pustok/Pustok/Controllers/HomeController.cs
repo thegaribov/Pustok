@@ -1,17 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pustok.Database;
+using Pustok.Database.Repositories;
 
 namespace Pustok.Controllers;
 
 //controller 
 public class HomeController : Controller
 {
+    private readonly ProductRepository _productRepository;
+
+    public HomeController()
+    {
+        _productRepository = new ProductRepository();
+    }
+
     // localhost:2323/home/index
     //action
     //url mapping, route mapping
     public ViewResult Index()
     {
-        return View(DbContext._products);
+        return View(_productRepository.GetAll());
     }
 
     // localhost:2323/home/contact

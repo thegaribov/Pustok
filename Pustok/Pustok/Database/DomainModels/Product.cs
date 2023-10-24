@@ -12,7 +12,6 @@ namespace Pustok.Database.DomainModels
 
         public Product(string name, decimal price, int rating)
         {
-            Id = ++DbContext._productId;
             Name = name;
             Price = price;
             Rating = rating;
@@ -23,6 +22,8 @@ namespace Pustok.Database.DomainModels
         public string Name { get; set; }
         public decimal Price { get; set; }
         public int Rating { get; set; }
+        public int? CategoryId { get; set; }
+        public Category Category { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

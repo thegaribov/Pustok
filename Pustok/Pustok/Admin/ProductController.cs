@@ -1,76 +1,86 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pustok.Database;
 using Pustok.Database.DomainModels;
+using Pustok.Database.Repositories;
 using Pustok.ViewModels;
-using System;
-using System.Linq;
 
-namespace Pustok.Admin
+namespace Pustok.Admin;
+
+public class AdminController : Controller
 {
-    public class AdminController : Controller
+    private readonly ProductRepository _productRepository;
+    private readonly CategoryRepository _categoryRepository;
+
+    public AdminController()
     {
-        [HttpGet]
-        public IActionResult Products()
+        _productRepository = new ProductRepository();
+        _categoryRepository = new CategoryRepository();
+    }
+
+
+    [HttpGet]
+    public IActionResult Products()
+    {
+        return View(_productRepository.GetAllWithCategories());
+    }
+
+    [HttpGet]
+    public IActionResult ProductAdd()
+    {
+        var categories = _categoryRepository.GetAll();
+        var model = new ProductAddRequestViewModel
         {
-            return View(DbContext._products);
+            Categories = categories
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public IActionResult SubmitProduct(Product product)
+    {
+        _productRepository.Insert(product);
+
+        return RedirectToAction("Products");
+    }
+
+    [HttpGet]
+    public IActionResult ProductEdit(int id)
+    {
+        Product product = _productRepository.GetById(id);
+        if (product == null)
+        {
+            return NotFound();
         }
 
-        [HttpGet]
-        public IActionResult ProductAdd()
+        return View(product);
+    }
+
+
+    [HttpPost]
+    public IActionResult EditSubmitProduct(ProductUpdateViewModel model)
+    {
+        Product product = _productRepository.GetById(model.Id);
+        if (product == null)
         {
-            return View();
+            return NotFound();
         }
 
-        [HttpPost]
-        public IActionResult SubmitProduct(Product product)
-        {
-            //object intializer
-            DbContext._products.Add(product);
+        _productRepository.Update(model);
 
-            return RedirectToAction("Products");
+        return RedirectToAction("Products");
+    }
+
+    [HttpGet]
+    public IActionResult DeleteProduct(int id)
+    {
+        Product product = _productRepository.GetById(id);
+        if (product == null)
+        {
+            return NotFound();
         }
 
-        [HttpGet]
-        public IActionResult ProductEdit(int id)
-        {
-            var product = DbContext._products.FirstOrDefault(p => p.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+        _productRepository.RemoveById(id);
 
-            return View(product);
-        }
-
-
-        [HttpPost]
-        public IActionResult EditSubmitProduct(ProductUpdateViewModel model)
-        {
-            var product = DbContext._products.FirstOrDefault(p => p.Id == model.Id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            product.Price = model.Price;
-            product.Rating = model.Rating;
-            product.UpdatedAt = DateTime.Now;
-
-            return RedirectToAction("Products");
-        }
-
-        [HttpGet]
-        public IActionResult DeleteProduct(int id)
-        {
-            var product = DbContext._products.FirstOrDefault(p => p.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            DbContext._products.Remove(product);
-
-            return RedirectToAction("Products");
-        }
+        return RedirectToAction("Products");
     }
 }

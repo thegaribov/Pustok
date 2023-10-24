@@ -11,7 +11,7 @@
 
     <div class="container">
         <h2>Products</h2>
-        <a class="btn btn-success">New Product</a>
+        <a href="~/admin/ProductAdd" class="btn btn-success">New Product</a>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -19,6 +19,7 @@
                     <th>Name</th>
                     <th>Price</th>
                     <th>Rating</th>
+                    <th>Category</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -33,6 +34,7 @@
                         <td>@product.Name</td>
                         <td>$@product.Price</td>
                         <td>@product.Rating</td>
+                        <td>@(product.Category?.Name ?? "-")</td>
                         <td>
                             <a href="~/admin/productedit?id=@product.Id" class="btn btn-warning">Edit</a>
                             <a href="~/admin/DeleteProduct?id=@product.Id" class="btn btn-danger">Remove</a>
