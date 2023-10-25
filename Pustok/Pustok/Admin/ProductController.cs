@@ -27,7 +27,7 @@ public class AdminController : Controller
     public IActionResult ProductAdd()
     {
         var categories = _categoryRepository.GetAll();
-        var model = new ProductAddRequestViewModel
+        var model = new ProductAddResponseViewModel
         {
             Categories = categories
         };
@@ -52,12 +52,22 @@ public class AdminController : Controller
             return NotFound();
         }
 
-        return View(product);
+        var model = new ProductUpdateResponseViewModel
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Price = product.Price,
+            Rating = product.Rating,
+            Categories = _categoryRepository.GetAll(),
+            CategoryId = product.CategoryId
+        };
+
+        return View(model);
     }
 
 
     [HttpPost]
-    public IActionResult EditSubmitProduct(ProductUpdateViewModel model)
+    public IActionResult EditSubmitProduct(ProductUpdateRequestViewModel model)
     {
         Product product = _productRepository.GetById(model.Id);
         if (product == null)
@@ -65,7 +75,11 @@ public class AdminController : Controller
             return NotFound();
         }
 
-        _productRepository.Update(model);
+        product.Price = model.Price;
+        product.Rating = model.Rating;
+        product.CategoryId = model.CategoryId;
+
+        _productRepository.Update(product);
 
         return RedirectToAction("Products");
     }
@@ -82,5 +96,13 @@ public class AdminController : Controller
         _productRepository.RemoveById(id);
 
         return RedirectToAction("Products");
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        _productRepository.Dispose();
+        _categoryRepository.Dispose();
+
+        base.Dispose(disposing);
     }
 }

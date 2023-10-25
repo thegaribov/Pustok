@@ -5,14 +5,13 @@ using System;
 
 namespace Pustok.Database.Repositories;
 
-public class CategoryRepository
+public class CategoryRepository : IDisposable
 {
-    private readonly string _connectionString = "Server=localhost;Port=5432;Database=Pustok;User Id=postgres;Password=postgres;";
     private readonly NpgsqlConnection _npgsqlConnection;
 
     public CategoryRepository()
     {
-        _npgsqlConnection = new NpgsqlConnection(_connectionString);
+        _npgsqlConnection = new NpgsqlConnection(DatabaseConstants.CONNECTION_STRING);
         _npgsqlConnection.Open();
     }
 
@@ -58,7 +57,7 @@ public class CategoryRepository
         return category;
     }
 
-    ~CategoryRepository()
+    public void Dispose()
     {
         _npgsqlConnection.Dispose();
     }

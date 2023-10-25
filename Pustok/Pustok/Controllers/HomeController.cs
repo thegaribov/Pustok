@@ -36,4 +36,10 @@ public class HomeController : Controller
         return View();
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        _productRepository.Dispose();
+
+        base.Dispose(disposing);
+    }
 }

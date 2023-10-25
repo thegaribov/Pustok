@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Pustok.ViewModels;
 
-public class ProductAddRequestViewModel
+public class ProductAddResponseViewModel
 {
     public List<Category> Categories { get; set; }
 }

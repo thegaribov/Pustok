@@ -6,14 +6,13 @@ using System.Collections.Generic;
 
 namespace Pustok.Database.Repositories;
 
-public class ProductRepository
+public class ProductRepository : IDisposable
 {
-    private readonly string _connectionString = "Server=localhost;Port=5432;Database=Pustok;User Id=postgres;Password=postgres;";
     private readonly NpgsqlConnection _npgsqlConnection;
 
     public ProductRepository()
     {
-        _npgsqlConnection = new NpgsqlConnection(_connectionString);
+        _npgsqlConnection = new NpgsqlConnection(DatabaseConstants.CONNECTION_STRING);
         _npgsqlConnection.Open();
     }
 
@@ -105,12 +104,12 @@ public class ProductRepository
         command.ExecuteNonQuery();
     }
 
-    public void Update(ProductUpdateViewModel model)
+    public void Update(Product product)
     {
         var query =
                 $"UPDATE products " +
-                $"SET price={model.Price}, rating={model.Rating} " +
-                $"WHERE id={model.Id}";
+                $"SET price={product.Price}, rating={product.Rating}, categoryid={product.CategoryId} " +
+                $"WHERE id={product.Id}";
 
         using NpgsqlCommand updateCommand = new NpgsqlCommand(query, _npgsqlConnection);
         updateCommand.ExecuteNonQuery();
@@ -124,7 +123,7 @@ public class ProductRepository
         updateCommand.ExecuteNonQuery();
     }
 
-    ~ProductRepository()
+    public void Dispose()
     {
         _npgsqlConnection.Dispose();
     }
