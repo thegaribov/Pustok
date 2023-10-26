@@ -1,0 +1,40 @@
+﻿@model ProductAddResponseViewModel
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="col-lg-6">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Basic Form</h4>
+            <p class="text-muted mb-0">Add New Product.</p>
+        </div><!--end card-header-->
+        <div class="card-body">
+            <form asp-controller="Product" asp-action="Add" method="POST">
+                <div class="form-group">
+                    <label asp-for="Name">Product Name:</label>
+                    <input asp-for="Name" type="text" class="form-control" id="productName" placeholder="Enter product name">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price">Price:</label>
+                    <input asp-for="Price" type="text" class="form-control" id="productPrice" placeholder="Enter price">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Rating">Rating:</label>
+                    <input asp-for="Rating" type="text" class="form-control" id="productRating" placeholder="Enter rating">
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Categories:</label>
+                    <select asp-for="CategoryId" id="productCategory" class="form-control">
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Product</button>
+            </form>
+        </div><!--end card-body-->
+    </div><!--end card-->
+</div>
