@@ -108,7 +108,7 @@ public class ProductRepository : IDisposable
     {
         var query =
                 $"UPDATE products " +
-                $"SET price={product.Price}, rating={product.Rating}, categoryid={product.CategoryId} " +
+                $"SET name='{product.Name}', price={product.Price}, rating={product.Rating}, categoryid={product.CategoryId} " +
                 $"WHERE id={product.Id}";
 
         using NpgsqlCommand updateCommand = new NpgsqlCommand(query, _npgsqlConnection);

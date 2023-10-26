@@ -84,13 +84,14 @@ public class ProductController : Controller
             return NotFound();
         }
 
+        product.Name = model.Name;
         product.Price = model.Price;
         product.Rating = model.Rating;
         product.CategoryId = model.CategoryId;
 
         _productRepository.Update(product);
 
-        return RedirectToAction("Views/Admin/Product/ProductEdit.cshtml", "Products");
+        return RedirectToAction("Products");
     }
 
     #endregion

@@ -37,49 +37,34 @@
                 <table class="table table-striped mb-0">
                     <thead>
                         <tr>
-                            <th>Customer</th>
-                            <th>Email</th>
-                            <th>Contact No</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Rating</th>
                             <th class="text-end">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><img src="assets/images/users/user-3.jpg" alt="" class="rounded-circle thumb-xs me-1"> Aaron Poulin</td>
-                            <td>Aaron@example.com</td>
-                            <td>+21 21547896</td>
-                            <td class="text-end">
-                                <a href="#"><i class="las la-pen text-secondary font-16"></i></a>
-                                <a href="#"><i class="las la-trash-alt text-secondary font-16"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><img src="assets/images/users/user-4.jpg" alt="" class="rounded-circle thumb-xs me-1"> Richard Ali</td>
-                            <td>Richard@example.com</td>
-                            <td>+41 21547896</td>
-                            <td class="text-end">
-                                <a href="#"><i class="las la-pen text-secondary font-16"></i></a>
-                                <a href="#"><i class="las la-trash-alt text-secondary font-16"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><img src="assets/images/users/user-5.jpg" alt="" class="rounded-circle thumb-xs me-1"> Juan Clark</td>
-                            <td>Juan@example.com</td>
-                            <td>+65 21547896</td>
-                            <td class="text-end">
-                                <a href="#"><i class="las la-pen text-secondary font-16"></i></a>
-                                <a href="#"><i class="las la-trash-alt text-secondary font-16"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><img src="assets/images/users/user-6.jpg" alt="" class="rounded-circle thumb-xs me-1"> Albert Hull</td>
-                            <td>Albert@example.com</td>
-                            <td>+88 21547896</td>
-                            <td class="text-end">
-                                <a href="#"><i class="las la-pen text-secondary font-16"></i></a>
-                                <a href="#"><i class="las la-trash-alt text-secondary font-16"></i></a>
-                            </td>
-                        </tr>
+                        @foreach (var product in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @*<img src="assets/images/users/user-3.jpg" alt="" class="rounded-circle thumb-xs me-1"> *@
+                                    @product.Name
+                                </td>
+                                <td>@product.Category.Name</td>
+                                <td>@product.Price $</td>
+                                <td>@product.Rating</td>
+                                <td class="text-end">
+                                    <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id">
+                                        <i class="las la-pen text-secondary font-16"></i>
+                                    </a>
+                                    <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id">
+                                        <i class="las la-trash-alt text-secondary font-16"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table><!--end /table-->
             </div><!--end /tableresponsive-->
