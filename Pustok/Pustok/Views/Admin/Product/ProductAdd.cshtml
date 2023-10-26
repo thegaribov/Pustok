@@ -13,14 +13,17 @@
                 <div class="form-group">
                     <label asp-for="Name">Product Name:</label>
                     <input asp-for="Name" type="text" class="form-control" id="productName" placeholder="Enter product name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Price">Price:</label>
                     <input asp-for="Price" type="text" class="form-control" id="productPrice" placeholder="Enter price">
+                    <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Rating">Rating:</label>
                     <input asp-for="Rating" type="text" class="form-control" id="productRating" placeholder="Enter rating">
+                    <span asp-validation-for="Rating" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="productCategory">Categories:</label>
@@ -31,6 +34,7 @@
 
                         }
                     </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
                 </div>
                 <button type="submit" class="btn btn-primary">Add Product</button>
             </form>

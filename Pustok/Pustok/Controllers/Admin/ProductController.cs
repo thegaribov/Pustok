@@ -42,8 +42,29 @@ public class ProductController : Controller
     }
 
     [HttpPost("add")]
-    public IActionResult Add(Product product)
+    public IActionResult Add(ProductAddRequestViewModel model)
     {
+        if (!ModelState.IsValid)
+        {
+            var categories = _categoryRepository.GetAll();
+
+            var responseViewModel = new ProductAddResponseViewModel
+            {
+                Categories = categories
+            };
+
+            return View("Views/Admin/Product/ProductAdd.cshtml", responseViewModel);
+        }
+
+
+        var product = new Product
+        {
+            Name = model.Name,
+            Price = model.Price,
+            Rating = model.Rating,
+            CategoryId = model.CategoryId,
+        };
+
         _productRepository.Insert(product);
 
         return RedirectToAction("Products");
@@ -56,6 +77,11 @@ public class ProductController : Controller
     [HttpGet("edit")]
     public IActionResult Edit(int id)
     {
+        if (!ModelState.IsValid)
+        {
+            return PrepareValidationView("Views/Admin/Product/ProductAdd.cshtml");
+        }
+
         Product product = _productRepository.GetById(id);
         if (product == null)
         {
@@ -78,6 +104,11 @@ public class ProductController : Controller
     [HttpPost("edit")]
     public IActionResult Edit(ProductUpdateRequestViewModel model)
     {
+        if (!ModelState.IsValid)
+        {
+            return PrepareValidationView("Views/Admin/Product/ProductEdit.cshtml");
+        }
+
         Product product = _productRepository.GetById(model.Id);
         if (product == null)
         {
@@ -113,6 +144,18 @@ public class ProductController : Controller
     }
 
     #endregion
+
+    private IActionResult PrepareValidationView(string viewName)
+    {
+        var categories = _categoryRepository.GetAll();
+
+        var responseViewModel = new ProductAddResponseViewModel
+        {
+            Categories = categories
+        };
+
+        return View(viewName, responseViewModel);
+    }
 
     protected override void Dispose(bool disposing)
     {

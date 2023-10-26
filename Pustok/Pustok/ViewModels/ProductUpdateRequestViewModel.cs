@@ -1,11 +1,6 @@
 ﻿namespace Pustok.ViewModels;
 
-public class ProductUpdateRequestViewModel
+public class ProductUpdateRequestViewModel : BaseProductViewModel
 {
     public int Id { get; set; }
-    public string Name { get; set; }
-    public decimal Price { get; set; }
-    public int Rating { get; set; }
-
-    public int? CategoryId { get; set; }
 }
