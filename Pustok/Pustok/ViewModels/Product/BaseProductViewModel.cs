@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Pustok.ViewModels;
+namespace Pustok.ViewModels.Product;
 
 public abstract class BaseProductViewModel
 {

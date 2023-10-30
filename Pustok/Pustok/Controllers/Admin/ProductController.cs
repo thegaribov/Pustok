@@ -4,6 +4,7 @@ using Npgsql;
 using Pustok.Database.DomainModels;
 using Pustok.Database.Repositories;
 using Pustok.ViewModels;
+using Pustok.ViewModels.Product;
 
 namespace Pustok.Controllers.Admin;
 

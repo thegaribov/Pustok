@@ -1,7 +1,7 @@
 ﻿using Pustok.Database.DomainModels;
 using System.Collections.Generic;
 
-namespace Pustok.ViewModels
+namespace Pustok.ViewModels.Product
 {
     public class ProductUpdateResponseViewModel : BaseProductViewModel
     {

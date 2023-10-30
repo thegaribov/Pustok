@@ -1,4 +1,4 @@
-﻿namespace Pustok.ViewModels;
+﻿namespace Pustok.ViewModels.Product;
 
 public class ProductUpdateRequestViewModel : BaseProductViewModel
 {

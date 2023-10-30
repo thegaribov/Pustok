@@ -13,6 +13,6 @@ namespace Pustok.Database.DomainModels
         public string Email { get; set; }
 
         public int DepartmentId { get; set; }
-        public Department Deparment { get; set; }
+        public Department Department { get; set; }
     }
 }
