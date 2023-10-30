@@ -63,7 +63,7 @@ public class EmployeeRepository : BaseRepository<Employee>, IDisposable
                 FatherName = Convert.ToString(dataReader["fathername"]),
                 Pin = Convert.ToString(dataReader["pin"]),
                 Email = Convert.ToString(dataReader["email"]),
-                DepartmentId = Convert.ToInt32(dataReader["deparmentId"]),
+                DepartmentId = Convert.ToInt32(dataReader["departmentId"]),
             };
         }
 
@@ -88,7 +88,7 @@ public class EmployeeRepository : BaseRepository<Employee>, IDisposable
                 FatherName = Convert.ToString(dataReader["fathername"]),
                 Pin = Convert.ToString(dataReader["pin"]),
                 Email = Convert.ToString(dataReader["email"]),
-                DepartmentId = Convert.ToInt32(dataReader["deparmentId"]),
+                DepartmentId = Convert.ToInt32(dataReader["departmentId"]),
             };
         }
 

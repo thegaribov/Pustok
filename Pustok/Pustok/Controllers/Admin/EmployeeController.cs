@@ -107,4 +107,21 @@ public class EmployeeController : Controller
 
     #endregion
 
+    #region Delete
+
+    [HttpGet("delete")]
+    public IActionResult Delete(string code)
+    {
+        Employee employee = _employeeRepository.GetByCode(code);
+        if (employee == null)
+        {
+            return NotFound();
+        }
+
+        _employeeRepository.RemoveById(employee.Id);
+
+        return RedirectToAction("Employees");
+    }
+
+    #endregion
 }
