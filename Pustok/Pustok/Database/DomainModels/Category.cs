@@ -1,6 +1,8 @@
-﻿namespace Pustok.Database.DomainModels;
+﻿using Pustok.Database.Abstracts;
 
-public class Category
+namespace Pustok.Database.DomainModels;
+
+public class Category : IEntity
 {
     public Category()
     {

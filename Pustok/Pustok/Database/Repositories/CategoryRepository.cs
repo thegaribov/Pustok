@@ -2,10 +2,11 @@
 using Pustok.Database.DomainModels;
 using System.Collections.Generic;
 using System;
+using Pustok.Database.Abstracts;
 
 namespace Pustok.Database.Repositories;
 
-public class CategoryRepository : IDisposable
+public class CategoryRepository : BaseRepository<Category>, IDisposable
 {
     private readonly NpgsqlConnection _npgsqlConnection;
 
@@ -15,7 +16,7 @@ public class CategoryRepository : IDisposable
         _npgsqlConnection.Open();
     }
 
-    public List<Category> GetAll()
+    public override List<Category> GetAll()
     {
         var selectQuery = "SELECT * FROM categories ORDER BY name";
 
@@ -38,7 +39,7 @@ public class CategoryRepository : IDisposable
         return categories;
     }
 
-    public Category GetById(int id)
+    public override Category GetById(int id)
     {
         using NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM categories WHERE id={id}", _npgsqlConnection);
         using NpgsqlDataReader dataReader = command.ExecuteReader();
@@ -60,5 +61,20 @@ public class CategoryRepository : IDisposable
     public void Dispose()
     {
         _npgsqlConnection.Dispose();
+    }
+
+    public override void Insert(Category data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Update(Category data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void RemoveById(int id)
+    {
+        throw new NotImplementedException();
     }
 }

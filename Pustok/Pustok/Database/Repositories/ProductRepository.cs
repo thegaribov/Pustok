@@ -1,4 +1,5 @@
 ﻿using Npgsql;
+using Pustok.Database.Abstracts;
 using Pustok.Database.DomainModels;
 using Pustok.ViewModels;
 using System;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Pustok.Database.Repositories;
 
-public class ProductRepository : IDisposable
+public class ProductRepository : BaseRepository<Product>, IDisposable
 {
     private readonly NpgsqlConnection _npgsqlConnection;
 
@@ -16,7 +17,7 @@ public class ProductRepository : IDisposable
         _npgsqlConnection.Open();
     }
 
-    public List<Product> GetAll()
+    public override List<Product> GetAll()
     {
         var selectQuery = "SELECT * FROM products ORDER BY name";
 
@@ -71,7 +72,7 @@ public class ProductRepository : IDisposable
         return products;
     }
 
-    public Product GetById(int id)
+    public override Product GetById(int id)
     {
         using NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM products WHERE id={id}", _npgsqlConnection);
         using NpgsqlDataReader dataReader = command.ExecuteReader();
@@ -92,9 +93,7 @@ public class ProductRepository : IDisposable
 
         return product;
     }
-
-
-    public void Insert(Product product)
+    public override void Insert(Product product)
     {
         string updateQuery =
             "INSERT INTO products(name, price, rating, categoryid)" +
@@ -103,8 +102,7 @@ public class ProductRepository : IDisposable
         using NpgsqlCommand command = new NpgsqlCommand(updateQuery, _npgsqlConnection);
         command.ExecuteNonQuery();
     }
-
-    public void Update(Product product)
+    public override void Update(Product product)
     {
         var query =
                 $"UPDATE products " +
@@ -114,8 +112,7 @@ public class ProductRepository : IDisposable
         using NpgsqlCommand updateCommand = new NpgsqlCommand(query, _npgsqlConnection);
         updateCommand.ExecuteNonQuery();
     }
-
-    public void RemoveById(int id)
+    public override void RemoveById(int id)
     {
         var query = $"DELETE FROM products WHERE id={id}";
 
