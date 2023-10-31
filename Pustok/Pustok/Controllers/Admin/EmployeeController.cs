@@ -36,7 +36,7 @@ public class EmployeeController : Controller
     [HttpGet] //admin/employees
     public IActionResult Employees()
     {
-        return View("Views/Admin/Employee/Employees.cshtml", _employeeRepository.GetAll());
+        return View("Views/Admin/Employee/Employees.cshtml", _employeeRepository.GetAllNotDeleted());
     }
 
     #endregion
@@ -118,7 +118,9 @@ public class EmployeeController : Controller
             return NotFound();
         }
 
-        _employeeRepository.RemoveById(employee.Id);
+        employee.IsDeleted = true;
+
+        _employeeRepository.Update(employee);
 
         return RedirectToAction("Employees");
     }

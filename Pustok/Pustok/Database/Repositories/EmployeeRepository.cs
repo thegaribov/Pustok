@@ -16,6 +16,36 @@ public class EmployeeRepository : BaseRepository<Employee>, IDisposable
         _npgsqlConnection.Open();
     }
 
+    public List<Employee> GetAllNotDeleted()
+    {
+        var selectQuery = "SELECT * FROM \"Employees\" WHERE \"IsDeleted\"='FALSE' ORDER BY name";
+
+        using NpgsqlCommand command = new NpgsqlCommand(selectQuery, _npgsqlConnection);
+        using NpgsqlDataReader dataReader = command.ExecuteReader();
+
+        List<Employee> employees = new List<Employee>();
+
+        while (dataReader.Read())
+        {
+            Employee employee = new Employee
+            {
+                Id = Convert.ToInt32(dataReader["id"]),
+                Code = Convert.ToString(dataReader["code"]),
+                Name = Convert.ToString(dataReader["name"]),
+                Surname = Convert.ToString(dataReader["surname"]),
+                FatherName = Convert.ToString(dataReader["fathername"]),
+                Pin = Convert.ToString(dataReader["pin"]),
+                Email = Convert.ToString(dataReader["email"]),
+                DepartmentId = Convert.ToInt32(dataReader["departmentId"]),
+                IsDeleted = Convert.ToBoolean(dataReader["IsDeleted"]),
+            };
+
+            employees.Add(employee);
+        }
+
+        return employees;
+    }
+
     public override List<Employee> GetAll()
     {
         var selectQuery = "SELECT * FROM \"Employees\" ORDER BY name";
@@ -37,6 +67,7 @@ public class EmployeeRepository : BaseRepository<Employee>, IDisposable
                 Pin = Convert.ToString(dataReader["pin"]),
                 Email = Convert.ToString(dataReader["email"]),
                 DepartmentId = Convert.ToInt32(dataReader["departmentId"]),
+                IsDeleted = Convert.ToBoolean(dataReader["IsDeleted"]),
             };
 
             employees.Add(employee);
@@ -64,6 +95,7 @@ public class EmployeeRepository : BaseRepository<Employee>, IDisposable
                 Pin = Convert.ToString(dataReader["pin"]),
                 Email = Convert.ToString(dataReader["email"]),
                 DepartmentId = Convert.ToInt32(dataReader["departmentId"]),
+                IsDeleted = Convert.ToBoolean(dataReader["IsDeleted"]),
             };
         }
 
@@ -89,6 +121,7 @@ public class EmployeeRepository : BaseRepository<Employee>, IDisposable
                 Pin = Convert.ToString(dataReader["pin"]),
                 Email = Convert.ToString(dataReader["email"]),
                 DepartmentId = Convert.ToInt32(dataReader["departmentId"]),
+                IsDeleted = Convert.ToBoolean(dataReader["IsDeleted"]),
             };
         }
 
@@ -98,8 +131,8 @@ public class EmployeeRepository : BaseRepository<Employee>, IDisposable
     public override void Insert(Employee data)
     {
         string updateQuery =
-            "INSERT INTO \"Employees\"(code, name, surname, fatherName, pin, email, \"departmentId\")" +
-            $"VALUES ('{data.Code}', '{data.Name}', '{data.Surname}', '{data.FatherName}', '{data.Pin}', '{data.Email}', {data.DepartmentId})";
+            "INSERT INTO \"Employees\"(code, name, surname, fatherName, pin, email, \"departmentId\", \"IsDeleted\")" +
+            $"VALUES ('{data.Code}', '{data.Name}', '{data.Surname}', '{data.FatherName}', '{data.Pin}', '{data.Email}', {data.DepartmentId}, '{data.IsDeleted}')";
 
         using NpgsqlCommand command = new NpgsqlCommand(updateQuery, _npgsqlConnection);
         command.ExecuteNonQuery();
@@ -115,7 +148,8 @@ public class EmployeeRepository : BaseRepository<Employee>, IDisposable
             $"  surname='{data.Surname}'," +
             $"  fatherName='{data.FatherName}'," +
             $"  pin='{data.Pin}'," +
-            $"  email='{data.Email}' " +
+            $"  email='{data.Email}', " +
+            $"  \"IsDeleted\"='{data.IsDeleted}' " +
             $"WHERE id={data.Id}";
 
         using NpgsqlCommand updateCommand = new NpgsqlCommand(query, _npgsqlConnection);

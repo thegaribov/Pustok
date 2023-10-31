@@ -11,6 +11,7 @@ namespace Pustok.Database.DomainModels
         public string FatherName { get; set; }
         public string Pin { get; set; }
         public string Email { get; set; }
+        public bool IsDeleted { get; set; }
 
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
