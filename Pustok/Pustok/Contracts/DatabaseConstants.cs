@@ -1,4 +1,4 @@
-﻿namespace Pustok;
+﻿namespace Pustok.Contracts;
 
 public static class DatabaseConstants
 {

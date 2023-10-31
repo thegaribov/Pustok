@@ -2,6 +2,7 @@
 using Pustok.Database.DomainModels;
 using System.Collections.Generic;
 using System;
+using Pustok.Contracts;
 
 namespace Pustok.Database.Repositories;
 

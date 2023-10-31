@@ -1,4 +1,5 @@
 ﻿using Npgsql;
+using Pustok.Contracts;
 using Pustok.Database.Abstracts;
 using Pustok.Database.DomainModels;
 using System;
