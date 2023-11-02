@@ -1,8 +1,10 @@
 ﻿using Pustok.Database.Abstracts;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pustok.Database.DomainModels;
 
+[Table("products")]
 public class Product : IEntity
 {
     public Product()
@@ -16,16 +18,21 @@ public class Product : IEntity
         Name = name;
         Price = price;
         Rating = rating;
-        CreatedAt = DateTime.Now;
     }
 
+    [Column("id")]
     public int Id { get; set; }
+
+    [Column("name")]
     public string Name { get; set; }
+
+    [Column("price")]
     public decimal Price { get; set; }
+
+    [Column("rating")]
     public int Rating { get; set; }
+
+    [Column("categoryid")]
     public int? CategoryId { get; set; }
     public Category Category { get; set; }
-
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
 }

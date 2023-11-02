@@ -1,27 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using Pustok.Database;
 using Pustok.Database.DomainModels;
-using Pustok.Database.Repositories;
-using Pustok.ViewModels;
 using Pustok.ViewModels.Product;
+using System.Linq;
 
 namespace Pustok.Controllers.Admin;
 
 [Route("admin/products")]
 public class ProductController : Controller
 {
-    private readonly ProductRepository _productRepository;
-    private readonly CategoryRepository _categoryRepository;
+    private readonly PustokDbContext _pustokDbContext;
     private readonly ILogger<ProductController> _logger;
 
     public ProductController()
     {
-        _productRepository = new ProductRepository();
-        _categoryRepository = new CategoryRepository();
+        _pustokDbContext = new PustokDbContext();
 
         var factory = LoggerFactory.Create(builder => { builder.AddConsole(); });
-
         _logger = factory.CreateLogger<ProductController>();
     }
 
@@ -30,7 +28,11 @@ public class ProductController : Controller
     [HttpGet] //admin/products
     public IActionResult Products()
     {
-        return View("Views/Admin/Product/Products.cshtml", _productRepository.GetAllWithCategories());
+        var products = _pustokDbContext.Products
+            .Include(p => p.Category)
+            .ToList();
+
+        return View("Views/Admin/Product/Products.cshtml", products);
     }
 
     #endregion
@@ -40,10 +42,9 @@ public class ProductController : Controller
     [HttpGet("add")]
     public IActionResult Add()
     {
-        var categories = _categoryRepository.GetAll();
         var model = new ProductAddResponseViewModel
         {
-            Categories = categories
+            Categories = _pustokDbContext.Categories.ToList()
         };
 
         return View("Views/Admin/Product/ProductAdd.cshtml", model);
@@ -57,7 +58,7 @@ public class ProductController : Controller
 
         if (model.CategoryId != null)
         {
-            var category = _categoryRepository.GetById(model.CategoryId.Value);
+            var category = _pustokDbContext.Categories.FirstOrDefault(c => c.Id == model.CategoryId.Value);
             if (category == null)
             {
                 ModelState.AddModelError("CategoryId", "Category doesn't exist");
@@ -76,7 +77,8 @@ public class ProductController : Controller
 
         try
         {
-            _productRepository.Insert(product);
+            _pustokDbContext.Products.Add(product);
+            _pustokDbContext.SaveChanges();
         }
         catch (PostgresException e)
         {
@@ -95,10 +97,9 @@ public class ProductController : Controller
     [HttpGet("edit")]
     public IActionResult Edit(int id)
     {
-        Product product = _productRepository.GetById(id);
+        Product product = _pustokDbContext.Products.FirstOrDefault(p => p.Id == id);
         if (product == null)
             return NotFound();
-
 
         var model = new ProductUpdateResponseViewModel
         {
@@ -106,7 +107,7 @@ public class ProductController : Controller
             Name = product.Name,
             Price = product.Price,
             Rating = product.Rating,
-            Categories = _categoryRepository.GetAll(),
+            Categories = _pustokDbContext.Categories.ToList(),
             CategoryId = product.CategoryId
         };
 
@@ -121,7 +122,7 @@ public class ProductController : Controller
 
         if (model.CategoryId != null)
         {
-            var category = _categoryRepository.GetById(model.CategoryId.Value);
+            var category = _pustokDbContext.Categories.FirstOrDefault(c => c.Id == model.CategoryId.Value);
             if (category == null)
             {
                 ModelState.AddModelError("CategoryId", "Category doesn't exist");
@@ -130,7 +131,7 @@ public class ProductController : Controller
             }
         }
 
-        Product product = _productRepository.GetById(model.Id);
+        Product product = _pustokDbContext.Products.FirstOrDefault(p => p.Id == model.Id);
         if (product == null)
             return NotFound();
 
@@ -143,7 +144,8 @@ public class ProductController : Controller
 
         try
         {
-            _productRepository.Update(product);
+            _pustokDbContext.Products.Update(product);
+            _pustokDbContext.SaveChanges();
         }
         catch (PostgresException e)
         {
@@ -163,13 +165,14 @@ public class ProductController : Controller
     [HttpGet("delete")]
     public IActionResult Delete(int id)
     {
-        Product product = _productRepository.GetById(id);
+        Product product = _pustokDbContext.Products.FirstOrDefault(p => p.Id == id);
         if (product == null)
         {
             return NotFound();
         }
 
-        _productRepository.RemoveById(id);
+        _pustokDbContext.Remove(product);
+        _pustokDbContext.SaveChanges();
 
         return RedirectToAction("Products");
     }
@@ -178,20 +181,16 @@ public class ProductController : Controller
 
     private IActionResult PrepareValidationView(string viewName)
     {
-        var categories = _categoryRepository.GetAll();
-
         var responseViewModel = new ProductAddResponseViewModel
         {
-            Categories = categories
+            Categories = _pustokDbContext.Categories.ToList()
         };
-
         return View(viewName, responseViewModel);
     }
 
     protected override void Dispose(bool disposing)
     {
-        _productRepository.Dispose();
-        _categoryRepository.Dispose();
+        _pustokDbContext.Dispose();
 
         base.Dispose(disposing);
     }

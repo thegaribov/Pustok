@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using Pustok.Database;
 using Pustok.Database.DomainModels;
-using Pustok.Database.Repositories;
 using Pustok.Services;
-using Pustok.ViewModels;
 using Pustok.ViewModels.Employee;
-using Pustok.ViewModels.Product;
+using System.Linq;
 
 namespace Pustok.Controllers.Admin;
 
@@ -14,15 +14,13 @@ namespace Pustok.Controllers.Admin;
 [Route("admin/employees")]
 public class EmployeeController : Controller
 {
-    private readonly EmployeeRepository _employeeRepository;
-    private readonly DepartmentRepository _departmentRepository;
+    private readonly PustokDbContext _dbContext;
     private readonly ILogger<ProductController> _logger;
     private readonly EmployeeService _employeeService;
 
     public EmployeeController()
     {
-        _employeeRepository = new EmployeeRepository();
-        _departmentRepository = new DepartmentRepository();
+        _dbContext = new PustokDbContext();
         _employeeService = new EmployeeService();
 
         var factory = LoggerFactory.Create(builder => { builder.AddConsole(); });
@@ -31,12 +29,21 @@ public class EmployeeController : Controller
     }
 
 
-    #region Products
+    #region Employees
 
     [HttpGet] //admin/employees
     public IActionResult Employees()
     {
-        return View("Views/Admin/Employee/Employees.cshtml", _employeeRepository.GetAllNotDeleted());
+        //decorator pattern
+        var employeesQuery = _dbContext.Employees
+            .Where(e => !e.IsDeleted)
+            .OrderBy(e => e.Name)
+            .AsQueryable();
+
+        var sql = employeesQuery.ToQueryString();
+
+
+        return View("Views/Admin/Employee/Employees.cshtml", employeesQuery.ToList());
     }
 
     #endregion
@@ -48,7 +55,7 @@ public class EmployeeController : Controller
     {
         var model = new EmployeeViewModel
         {
-            Departments = _departmentRepository.GetAll()
+            Departments = _dbContext.Departments.ToList()
         };
 
         return View("Views/Admin/Employee/EmployeeAdd.cshtml", model);
@@ -60,7 +67,13 @@ public class EmployeeController : Controller
         if (!ModelState.IsValid)
             return PrepareValidationView("Views/Admin/Product/ProductAdd.cshtml");
 
-        var deparment = _departmentRepository.GetById(model.DepartmentId);
+        var query = _dbContext.Departments
+                .Where(d => d.Id == model.DepartmentId)
+                .AsQueryable()
+                .ToQueryString();
+
+
+        var deparment = _dbContext.Departments.FirstOrDefault(d => d.Id == model.DepartmentId);
         if (deparment == null)
         {
             ModelState.AddModelError("DeparmentId", "Deparment doesn't exist");
@@ -81,7 +94,8 @@ public class EmployeeController : Controller
 
         try
         {
-            _employeeRepository.Insert(employee);
+            _dbContext.Employees.Add(employee);
+            _dbContext.SaveChanges(); //unit of work pattern => transaction
         }
         catch (PostgresException e)
         {
@@ -95,7 +109,7 @@ public class EmployeeController : Controller
 
     private IActionResult PrepareValidationView(string viewName)
     {
-        var deparments = _departmentRepository.GetAll();
+        var deparments = _dbContext.Departments.ToList();
 
         var responseViewModel = new EmployeeViewModel
         {
@@ -112,7 +126,7 @@ public class EmployeeController : Controller
     [HttpGet("delete")]
     public IActionResult Delete(string code)
     {
-        Employee employee = _employeeRepository.GetByCode(code);
+        Employee employee = _dbContext.Employees.FirstOrDefault(e => e.Code == code);
         if (employee == null)
         {
             return NotFound();
@@ -120,10 +134,19 @@ public class EmployeeController : Controller
 
         employee.IsDeleted = true;
 
-        _employeeRepository.Update(employee);
+        _dbContext.Employees.Update(employee);
+        _dbContext.SaveChanges();
 
         return RedirectToAction("Employees");
     }
 
     #endregion
+
+    protected override void Dispose(bool disposing)
+    {
+        _dbContext.Dispose();
+        _employeeService.Dispose();
+
+        base.Dispose(disposing);
+    }
 }

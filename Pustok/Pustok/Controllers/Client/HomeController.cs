@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pustok.Database;
-using Pustok.Database.Repositories;
+using System.Linq;
 
 namespace Pustok.Controllers.Client;
 
 //controller 
 public class HomeController : Controller
 {
-    private readonly ProductRepository _productRepository;
+    private readonly PustokDbContext _dbContext;
 
     public HomeController()
     {
-        _productRepository = new ProductRepository();
+        _dbContext = new PustokDbContext();
     }
 
     // localhost:2323/home/index
@@ -19,7 +19,7 @@ public class HomeController : Controller
     //url mapping, route mapping
     public ViewResult Index()
     {
-        return View(_productRepository.GetAll());
+        return View(_dbContext.Products.ToList());
     }
 
     // localhost:2323/home/contact
@@ -38,7 +38,7 @@ public class HomeController : Controller
 
     protected override void Dispose(bool disposing)
     {
-        _productRepository.Dispose();
+        _dbContext.Dispose();
 
         base.Dispose(disposing);
     }

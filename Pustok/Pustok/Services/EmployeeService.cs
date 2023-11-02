@@ -1,15 +1,16 @@
-﻿using Pustok.Database.Repositories;
+﻿using Pustok.Database;
 using System;
+using System.Linq;
 
 namespace Pustok.Services;
 
 public class EmployeeService : IDisposable
 {
-    private readonly EmployeeRepository _employeeRepository;
+    private readonly PustokDbContext _dbContext;
 
     public EmployeeService()
     {
-        _employeeRepository = new EmployeeRepository();
+        _dbContext = new PustokDbContext();
     }
 
     public string GenerateAndGetCode()
@@ -23,13 +24,13 @@ public class EmployeeService : IDisposable
             numberPart = random.Next(1, 100000).ToString();
             code = $"E{numberPart.PadLeft(5, '0')}";
 
-        } while (_employeeRepository.GetByCode(code) != null);
+        } while (_dbContext.Employees.Any(e => e.Code == code));
 
         return code;
     }
 
     public void Dispose()
     {
-        _employeeRepository.Dispose();
+        _dbContext.Dispose();
     }
 }
