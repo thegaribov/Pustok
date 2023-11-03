@@ -5,6 +5,7 @@ using Npgsql;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.Services;
+using Pustok.Services.Abstract;
 using Pustok.ViewModels.Employee;
 using System.Linq;
 
@@ -15,17 +16,17 @@ namespace Pustok.Controllers.Admin;
 public class EmployeeController : Controller
 {
     private readonly PustokDbContext _dbContext;
-    private readonly ILogger<ProductController> _logger;
-    private readonly EmployeeService _employeeService;
+    private readonly ILogger<EmployeeController> _logger;
+    private readonly IEmployeeService _employeeService;
 
-    public EmployeeController()
+    public EmployeeController(
+        PustokDbContext pustokDbContext,
+        IEmployeeService employeeService,
+        ILogger<EmployeeController> logger)
     {
-        _dbContext = new PustokDbContext();
-        _employeeService = new EmployeeService();
-
-        var factory = LoggerFactory.Create(builder => { builder.AddConsole(); });
-
-        _logger = factory.CreateLogger<ProductController>();
+        _dbContext = pustokDbContext;
+        _employeeService = employeeService;
+        _logger = logger;
     }
 
 

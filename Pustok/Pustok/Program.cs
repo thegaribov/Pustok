@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Pustok.Contracts;
+using Pustok.Database;
 using Pustok.Services;
+using Pustok.Services.Abstract;
 
 namespace Pustok
 {
@@ -21,6 +25,13 @@ namespace Pustok
             builder.Services
                 .AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
+
+            builder.Services
+                .AddScoped<IEmployeeService, EmployeeServiceImp>()
+                .AddDbContext<PustokDbContext>(o =>
+                {
+                    o.UseNpgsql(DatabaseConstants.CONNECTION_STRING);
+                });
 
             var app = builder.Build();
 

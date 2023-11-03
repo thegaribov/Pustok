@@ -7,16 +7,10 @@ namespace Pustok.Database;
 
 public class PustokDbContext : DbContext
 {
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        var factory = LoggerFactory.Create(builder => { builder.AddConsole(); });
+    public PustokDbContext(DbContextOptions dbContextOptions)
+        : base(dbContextOptions) { }
 
-        optionsBuilder
-            .UseLoggerFactory(factory)
-            .UseNpgsql(DatabaseConstants.CONNECTION_STRING);
 
-        base.OnConfiguring(optionsBuilder);
-    }
 
     public DbSet<Department> Departments { get; set; }
     public DbSet<Employee> Employees { get; set; }

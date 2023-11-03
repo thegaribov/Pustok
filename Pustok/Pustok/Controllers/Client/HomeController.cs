@@ -9,9 +9,9 @@ public class HomeController : Controller
 {
     private readonly PustokDbContext _dbContext;
 
-    public HomeController()
+    public HomeController(PustokDbContext pustokDbContext)
     {
-        _dbContext = new PustokDbContext();
+        _dbContext = pustokDbContext;
     }
 
     // localhost:2323/home/index

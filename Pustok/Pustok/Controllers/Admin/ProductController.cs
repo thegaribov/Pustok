@@ -15,12 +15,12 @@ public class ProductController : Controller
     private readonly PustokDbContext _pustokDbContext;
     private readonly ILogger<ProductController> _logger;
 
-    public ProductController()
+    public ProductController(
+        PustokDbContext pustokDbContext,
+        ILogger<ProductController> logger)
     {
-        _pustokDbContext = new PustokDbContext();
-
-        var factory = LoggerFactory.Create(builder => { builder.AddConsole(); });
-        _logger = factory.CreateLogger<ProductController>();
+        _pustokDbContext = pustokDbContext;
+        _logger = logger;
     }
 
     #region Products
