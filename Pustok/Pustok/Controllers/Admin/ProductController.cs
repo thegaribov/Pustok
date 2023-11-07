@@ -187,11 +187,4 @@ public class ProductController : Controller
         };
         return View(viewName, responseViewModel);
     }
-
-    protected override void Dispose(bool disposing)
-    {
-        _pustokDbContext.Dispose();
-
-        base.Dispose(disposing);
-    }
 }

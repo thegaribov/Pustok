@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Pustok.Services;
 
-public class EmployeeServiceImp : IEmployeeService, IDisposable
+public class EmployeeServiceImp : IEmployeeService
 {
     private readonly PustokDbContext _dbContext;
 
@@ -33,10 +33,5 @@ public class EmployeeServiceImp : IEmployeeService, IDisposable
     private bool DoesCodeExist(string code)
     {
         return _dbContext.Employees.Any(e => e.Code == code);
-    }
-
-    public void Dispose()
-    {
-        _dbContext.Dispose();
     }
 }

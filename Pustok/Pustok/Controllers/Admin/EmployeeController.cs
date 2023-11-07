@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Npgsql;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
-using Pustok.Services;
 using Pustok.Services.Abstract;
 using Pustok.ViewModels.Employee;
 using System.Linq;
@@ -40,9 +39,6 @@ public class EmployeeController : Controller
             .Where(e => !e.IsDeleted)
             .OrderBy(e => e.Name)
             .AsQueryable();
-
-        var sql = employeesQuery.ToQueryString();
-
 
         return View("Views/Admin/Employee/Employees.cshtml", employeesQuery.ToList());
     }
@@ -142,12 +138,4 @@ public class EmployeeController : Controller
     }
 
     #endregion
-
-    protected override void Dispose(bool disposing)
-    {
-        _dbContext.Dispose();
-        _employeeService.Dispose();
-
-        base.Dispose(disposing);
-    }
 }
