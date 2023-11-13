@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Pustok.Database.DomainModels;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Pustok.ViewModels.Product;
 
@@ -14,4 +16,7 @@ public abstract class BaseProductViewModel
     public int Rating { get; set; }
 
     public int? CategoryId { get; set; }
+
+    public int[] SelectedColorIds { get; set; }
+    public List<Color> Colors { get; set; }
 }

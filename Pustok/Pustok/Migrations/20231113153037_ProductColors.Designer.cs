@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pustok.Database;
@@ -11,9 +12,10 @@ using Pustok.Database;
 namespace Pustok.Migrations
 {
     [DbContext(typeof(PustokDbContext))]
-    partial class PustokDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231113153037_ProductColors")]
+    partial class ProductColors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,28 +56,6 @@ namespace Pustok.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Colors");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = -1,
-                            Name = "Red"
-                        },
-                        new
-                        {
-                            Id = -2,
-                            Name = "Green"
-                        },
-                        new
-                        {
-                            Id = -3,
-                            Name = "Blue"
-                        },
-                        new
-                        {
-                            Id = -4,
-                            Name = "Black"
-                        });
                 });
 
             modelBuilder.Entity("Pustok.Database.DomainModels.Department", b =>
@@ -177,7 +157,7 @@ namespace Pustok.Migrations
 
                     b.HasIndex("ColorId");
 
-                    b.ToTable("ProductColors", (string)null);
+                    b.ToTable("ProductColor");
                 });
 
             modelBuilder.Entity("Pustok.Database.DomainModels.Employee", b =>

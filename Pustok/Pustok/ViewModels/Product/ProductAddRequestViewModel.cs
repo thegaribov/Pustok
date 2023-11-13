@@ -4,5 +4,5 @@ namespace Pustok.ViewModels.Product;
 
 public class ProductAddRequestViewModel : BaseProductViewModel
 {
-
+    
 }

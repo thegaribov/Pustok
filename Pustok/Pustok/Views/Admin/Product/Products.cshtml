@@ -40,6 +40,7 @@
                             <th>Name</th>
                             <th>Category</th>
                             <th>Price</th>
+                            <th>Colors</th>
                             <th>Rating</th>
                             <th class="text-end">Action</th>
                         </tr>
@@ -54,6 +55,7 @@
                                 </td>
                                 <td>@product.Category.Name</td>
                                 <td>@product.Price $</td>
+                                <td>@string.Join(',', product.ProductColors.Select(pc =>pc.Color.Name))</td>
                                 <td>
                                     <span style="vertical-align: middle;">
                                         @for (int i = 0; i < @product.Rating; i++)

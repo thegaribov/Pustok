@@ -30,6 +30,8 @@ public class ProductController : Controller
     {
         var products = _pustokDbContext.Products
             .Include(p => p.Category)
+            .Include(p => p.ProductColors)
+                .ThenInclude(pc => pc.Color)
             .ToList();
 
         return View("Views/Admin/Product/Products.cshtml", products);
@@ -44,7 +46,8 @@ public class ProductController : Controller
     {
         var model = new ProductAddResponseViewModel
         {
-            Categories = _pustokDbContext.Categories.ToList()
+            Categories = _pustokDbContext.Categories.ToList(),
+            Colors = _pustokDbContext.Colors.ToList()
         };
 
         return View("Views/Admin/Product/ProductAdd.cshtml", model);
@@ -67,18 +70,32 @@ public class ProductController : Controller
             }
         }
 
-        var product = new Product
-        {
-            Name = model.Name,
-            Price = model.Price,
-            Rating = model.Rating,
-            CategoryId = model.CategoryId,
-        };
-
         try
         {
+            var product = new Product
+            {
+                Name = model.Name,
+                Price = model.Price,
+                Rating = model.Rating,
+                CategoryId = model.CategoryId,
+            };
+
             _pustokDbContext.Products.Add(product);
             _pustokDbContext.SaveChanges();
+
+
+            foreach (var colorId in model.SelectedColorIds)
+            {
+                var productColor = new ProductColor
+                {
+                    ColorId = colorId,
+                    ProductId = product.Id
+                };
+
+                _pustokDbContext.ProductColors.Add(productColor);
+                _pustokDbContext.SaveChanges();
+            }
+
         }
         catch (PostgresException e)
         {
@@ -97,7 +114,10 @@ public class ProductController : Controller
     [HttpGet("edit")]
     public IActionResult Edit(int id)
     {
-        Product product = _pustokDbContext.Products.FirstOrDefault(p => p.Id == id);
+        Product product = _pustokDbContext.Products
+            .Include(p => p.ProductColors)
+            .FirstOrDefault(p => p.Id == id);
+
         if (product == null)
             return NotFound();
 
@@ -108,7 +128,9 @@ public class ProductController : Controller
             Price = product.Price,
             Rating = product.Rating,
             Categories = _pustokDbContext.Categories.ToList(),
-            CategoryId = product.CategoryId
+            CategoryId = product.CategoryId,
+            SelectedColorIds = product.ProductColors.Select(pc => pc.ColorId).ToArray(),
+            Colors = _pustokDbContext.Colors.ToList()
         };
 
         return View("Views/Admin/Product/ProductEdit.cshtml", model);
@@ -131,21 +153,37 @@ public class ProductController : Controller
             }
         }
 
-        Product product = _pustokDbContext.Products.FirstOrDefault(p => p.Id == model.Id);
+        Product product = _pustokDbContext.Products
+            .Include(p => p.ProductColors)
+            .FirstOrDefault(p => p.Id == model.Id);
+
         if (product == null)
             return NotFound();
 
-
-        product.Name = model.Name;
-        product.Price = model.Price;
-        product.Rating = model.Rating;
-        product.CategoryId = model.CategoryId;
-
-
         try
         {
+            product.ProductColors.Clear();
+            _pustokDbContext.SaveChanges();
+
+            product.Name = model.Name;
+            product.Price = model.Price;
+            product.Rating = model.Rating;
+            product.CategoryId = model.CategoryId;
+
             _pustokDbContext.Products.Update(product);
             _pustokDbContext.SaveChanges();
+
+            foreach (var colorId in model.SelectedColorIds)
+            {
+                var productColor = new ProductColor
+                {
+                    ColorId = colorId,
+                    ProductId = product.Id
+                };
+
+                _pustokDbContext.ProductColors.Add(productColor);
+                _pustokDbContext.SaveChanges();
+            }           
         }
         catch (PostgresException e)
         {
@@ -165,7 +203,8 @@ public class ProductController : Controller
     [HttpGet("delete")]
     public IActionResult Delete(int id)
     {
-        Product product = _pustokDbContext.Products.FirstOrDefault(p => p.Id == id);
+        Product product = _pustokDbContext.Products
+            .FirstOrDefault(p => p.Id == id);
         if (product == null)
         {
             return NotFound();
@@ -173,6 +212,7 @@ public class ProductController : Controller
 
         _pustokDbContext.Remove(product);
         _pustokDbContext.SaveChanges();
+
 
         return RedirectToAction("Products");
     }

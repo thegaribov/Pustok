@@ -43,7 +43,7 @@ public class Program
         //app.MapGet("/contact", () => "This is my contact : +994.."); //text/plain
         //app.MapGet("/about", () => Results.Content("<h1>About in World!</h1>", "text/html"));
 
-        app.MapControllerRoute("default", "{controller}/{action}");
+        app.MapControllerRoute("default", "{controller=Home}/{action=Index}");
 
         app.Run();
     }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pustok.Database;
@@ -11,9 +12,10 @@ using Pustok.Database;
 namespace Pustok.Migrations
 {
     [DbContext(typeof(PustokDbContext))]
-    partial class PustokDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231113152343_Colors")]
+    partial class Colors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,28 +56,6 @@ namespace Pustok.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Colors");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = -1,
-                            Name = "Red"
-                        },
-                        new
-                        {
-                            Id = -2,
-                            Name = "Green"
-                        },
-                        new
-                        {
-                            Id = -3,
-                            Name = "Blue"
-                        },
-                        new
-                        {
-                            Id = -4,
-                            Name = "Black"
-                        });
                 });
 
             modelBuilder.Entity("Pustok.Database.DomainModels.Department", b =>
@@ -165,21 +145,6 @@ namespace Pustok.Migrations
                     b.ToTable("products", null, t => t.ExcludeFromMigrations());
                 });
 
-            modelBuilder.Entity("Pustok.Database.DomainModels.ProductColor", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ColorId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ProductId", "ColorId");
-
-                    b.HasIndex("ColorId");
-
-                    b.ToTable("ProductColors", (string)null);
-                });
-
             modelBuilder.Entity("Pustok.Database.DomainModels.Employee", b =>
                 {
                     b.HasOne("Pustok.Database.DomainModels.Department", "Department")
@@ -198,25 +163,6 @@ namespace Pustok.Migrations
                         .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Pustok.Database.DomainModels.ProductColor", b =>
-                {
-                    b.HasOne("Pustok.Database.DomainModels.Color", "Color")
-                        .WithMany()
-                        .HasForeignKey("ColorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Pustok.Database.DomainModels.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Color");
-
-                    b.Navigation("Product");
                 });
 #pragma warning restore 612, 618
         }

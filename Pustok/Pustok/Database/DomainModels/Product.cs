@@ -1,5 +1,6 @@
 ﻿using Pustok.Database.Abstracts;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pustok.Database.DomainModels;
@@ -35,4 +36,6 @@ public class Product : IEntity
     [Column("categoryid")]
     public int? CategoryId { get; set; }
     public Category Category { get; set; }
+
+    public List<ProductColor> ProductColors { get; set; }
 }
