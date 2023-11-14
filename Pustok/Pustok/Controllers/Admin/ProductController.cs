@@ -81,20 +81,29 @@ public class ProductController : Controller
             };
 
             _pustokDbContext.Products.Add(product);
-            _pustokDbContext.SaveChanges();
 
 
             foreach (var colorId in model.SelectedColorIds)
             {
+                var color = _pustokDbContext.Colors.FirstOrDefault(c => c.Id == colorId);
+                if (color == null)
+                {
+                    ModelState.AddModelError("SelectedColorIds", "Color doesn't exist");
+
+                    return PrepareValidationView("Views/Admin/Product/ProductAdd.cshtml");
+                }
+
+
                 var productColor = new ProductColor
                 {
-                    ColorId = colorId,
-                    ProductId = product.Id
+                    ColorId = color.Id,
+                    Product = product
                 };
 
                 _pustokDbContext.ProductColors.Add(productColor);
-                _pustokDbContext.SaveChanges();
             }
+
+            _pustokDbContext.SaveChanges();
 
         }
         catch (PostgresException e)
@@ -163,7 +172,6 @@ public class ProductController : Controller
         try
         {
             product.ProductColors.Clear();
-            _pustokDbContext.SaveChanges();
 
             product.Name = model.Name;
             product.Price = model.Price;
@@ -171,19 +179,22 @@ public class ProductController : Controller
             product.CategoryId = model.CategoryId;
 
             _pustokDbContext.Products.Update(product);
-            _pustokDbContext.SaveChanges();
+
 
             foreach (var colorId in model.SelectedColorIds)
             {
                 var productColor = new ProductColor
                 {
                     ColorId = colorId,
-                    ProductId = product.Id
+                    Product = product,
                 };
 
+
+
                 _pustokDbContext.ProductColors.Add(productColor);
-                _pustokDbContext.SaveChanges();
-            }           
+            }
+
+            _pustokDbContext.SaveChanges();
         }
         catch (PostgresException e)
         {
@@ -223,8 +234,10 @@ public class ProductController : Controller
     {
         var responseViewModel = new ProductAddResponseViewModel
         {
-            Categories = _pustokDbContext.Categories.ToList()
+            Categories = _pustokDbContext.Categories.ToList(),
+            Colors = _pustokDbContext.Colors.ToList()
         };
+
         return View(viewName, responseViewModel);
     }
 }
