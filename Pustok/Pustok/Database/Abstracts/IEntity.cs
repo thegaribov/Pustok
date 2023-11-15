@@ -1,4 +1,7 @@
 ﻿namespace Pustok.Database.Abstracts
 {
-    public interface IEntity { }
+    public interface IEntity 
+    {
+        
+    }
 }

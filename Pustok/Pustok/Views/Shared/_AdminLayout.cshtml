@@ -19,11 +19,14 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="~/admin/assets/images/favicon.ico">
 
+    @RenderSection("custom_plugings", false)
+
     <!-- App css -->
     <link href="~/admin/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/admin/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="~/admin/assets/css/app.min.css" rel="stylesheet" type="text/css" />
 
+    @RenderSection("custom_styles", false)
 </head>
 
 <body id="body">
@@ -261,9 +264,12 @@
     </div>
     <!-- end page-wrapper -->
     <!-- Javascript  -->
+    @RenderSection("custom_plugin_scripts", false)
+
     <!-- App js -->
     <script src="~/admin/assets/js/app.js"></script>
 
+    @RenderSection("custom_scripts", false)
 </body>
 <!--end body-->
 </html>

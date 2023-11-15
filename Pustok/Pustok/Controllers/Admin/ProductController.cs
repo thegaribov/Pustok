@@ -169,30 +169,40 @@ public class ProductController : Controller
         if (product == null)
             return NotFound();
 
+
+        var productColorIdsInDb = product.ProductColors.Select(pc => pc.ColorId);
+
+        //Remove proces ========================================
+
+        var removableIds = productColorIdsInDb
+            .Where(id => !model.SelectedColorIds.Contains(id))
+            .ToList();
+
+        product.ProductColors.RemoveAll(pc => removableIds.Contains(pc.ColorId));
+
+
+
+        //Add proces ========================================
+
+        var addableIdS = model.SelectedColorIds
+            .Where(id => !productColorIdsInDb.Contains(id))
+            .ToList();
+
+        var newProductColors = addableIdS.Select(colorId => new ProductColor
+        {
+            ColorId = colorId,
+            Product = product
+        });
+
+        product.ProductColors.AddRange(newProductColors);
+       
+
         try
         {
-            product.ProductColors.Clear();
-
             product.Name = model.Name;
             product.Price = model.Price;
             product.Rating = model.Rating;
             product.CategoryId = model.CategoryId;
-
-            _pustokDbContext.Products.Update(product);
-
-
-            foreach (var colorId in model.SelectedColorIds)
-            {
-                var productColor = new ProductColor
-                {
-                    ColorId = colorId,
-                    Product = product,
-                };
-
-
-
-                _pustokDbContext.ProductColors.Add(productColor);
-            }
 
             _pustokDbContext.SaveChanges();
         }
