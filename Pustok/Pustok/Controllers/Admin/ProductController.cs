@@ -32,6 +32,8 @@ public class ProductController : Controller
             .Include(p => p.Category)
             .Include(p => p.ProductColors)
                 .ThenInclude(pc => pc.Color)
+            .Include(p => p.ProductSizes)
+                .ThenInclude(ps => ps.Size)
             .ToList();
 
         return View("Views/Admin/Product/Products.cshtml", products);
@@ -47,7 +49,8 @@ public class ProductController : Controller
         var model = new ProductAddResponseViewModel
         {
             Categories = _pustokDbContext.Categories.ToList(),
-            Colors = _pustokDbContext.Colors.ToList()
+            Colors = _pustokDbContext.Colors.ToList(),
+            Sizes = _pustokDbContext.Sizes.ToList(),
         };
 
         return View("Views/Admin/Product/ProductAdd.cshtml", model);
@@ -82,7 +85,6 @@ public class ProductController : Controller
 
             _pustokDbContext.Products.Add(product);
 
-
             foreach (var colorId in model.SelectedColorIds)
             {
                 var color = _pustokDbContext.Colors.FirstOrDefault(c => c.Id == colorId);
@@ -101,6 +103,26 @@ public class ProductController : Controller
                 };
 
                 _pustokDbContext.ProductColors.Add(productColor);
+            }
+
+            foreach (var sizeId in model.SelectedSizeIds)
+            {
+                var size = _pustokDbContext.Sizes.FirstOrDefault(c => c.Id == sizeId);
+                if (size == null)
+                {
+                    ModelState.AddModelError("SelectedSizeIds", "Size doesn't exist");
+
+                    return PrepareValidationView("Views/Admin/Product/ProductAdd.cshtml");
+                }
+
+
+                var productSize = new ProductSize
+                {
+                    Size = size,
+                    Product = product
+                };
+
+                _pustokDbContext.ProductSizes.Add(productSize);
             }
 
             _pustokDbContext.SaveChanges();
@@ -125,6 +147,7 @@ public class ProductController : Controller
     {
         Product product = _pustokDbContext.Products
             .Include(p => p.ProductColors)
+            .Include(p => p.ProductSizes)
             .FirstOrDefault(p => p.Id == id);
 
         if (product == null)
@@ -139,7 +162,9 @@ public class ProductController : Controller
             Categories = _pustokDbContext.Categories.ToList(),
             CategoryId = product.CategoryId,
             SelectedColorIds = product.ProductColors.Select(pc => pc.ColorId).ToArray(),
-            Colors = _pustokDbContext.Colors.ToList()
+            Colors = _pustokDbContext.Colors.ToList(),
+            SelectedSizeIds = product.ProductSizes.Select(ps => ps.SizeId).ToArray(),
+            Sizes = _pustokDbContext.Sizes.ToList()
         };
 
         return View("Views/Admin/Product/ProductEdit.cshtml", model);
@@ -164,38 +189,69 @@ public class ProductController : Controller
 
         Product product = _pustokDbContext.Products
             .Include(p => p.ProductColors)
+            .Include(p => p.ProductSizes)
             .FirstOrDefault(p => p.Id == model.Id);
 
         if (product == null)
             return NotFound();
 
+        #region Product color
 
         var productColorIdsInDb = product.ProductColors.Select(pc => pc.ColorId);
 
         //Remove proces ========================================
 
-        var removableIds = productColorIdsInDb
+        var removableColorIds = productColorIdsInDb
             .Where(id => !model.SelectedColorIds.Contains(id))
             .ToList();
 
-        product.ProductColors.RemoveAll(pc => removableIds.Contains(pc.ColorId));
-
+        product.ProductColors.RemoveAll(pc => removableColorIds.Contains(pc.ColorId));
 
 
         //Add proces ========================================
 
-        var addableIdS = model.SelectedColorIds
+        var addableColorIds = model.SelectedColorIds
             .Where(id => !productColorIdsInDb.Contains(id))
             .ToList();
 
-        var newProductColors = addableIdS.Select(colorId => new ProductColor
+        var newProductColors = addableColorIds.Select(colorId => new ProductColor
         {
             ColorId = colorId,
             Product = product
         });
 
         product.ProductColors.AddRange(newProductColors);
-       
+
+        #endregion
+
+        #region Product size
+
+        var productSizeIdsInDb = product.ProductSizes.Select(pc => pc.SizeId);
+
+        //Remove proces ========================================
+
+        var removableSizeIds = productSizeIdsInDb
+            .Where(id => !model.SelectedSizeIds.Contains(id))
+            .ToList();
+
+        product.ProductSizes.RemoveAll(pc => removableSizeIds.Contains(pc.SizeId));
+
+
+        //Add proces ========================================
+
+        var addableSizeIds = model.SelectedSizeIds
+            .Where(id => !productSizeIdsInDb.Contains(id))
+            .ToList();
+
+        var newProductSize = addableSizeIds.Select(sizeId => new ProductSize
+        {
+            SizeId = sizeId,
+            Product = product
+        });
+
+        product.ProductSizes.AddRange(newProductSize);
+
+        #endregion
 
         try
         {
@@ -245,7 +301,8 @@ public class ProductController : Controller
         var responseViewModel = new ProductAddResponseViewModel
         {
             Categories = _pustokDbContext.Categories.ToList(),
-            Colors = _pustokDbContext.Colors.ToList()
+            Colors = _pustokDbContext.Colors.ToList(),
+            Sizes = _pustokDbContext.Sizes.ToList(),
         };
 
         return View(viewName, responseViewModel);

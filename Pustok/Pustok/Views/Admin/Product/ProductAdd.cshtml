@@ -53,6 +53,19 @@
                     </select>
                     <span asp-validation-for="SelectedColorIds" class="text-danger"></span>
                 </div>
+
+                <div class="form-group">
+                    <label for="productSize">Sizes:</label>
+                    <select multiple asp-for="SelectedSizeIds" id="productSize" class="form-control">
+                        @foreach (var size in Model.Sizes)
+                        {
+                            <option value="@size.Id">@size.Name</option>
+
+                        }
+                    </select>
+                    <span asp-validation-for="SelectedSizeIds" class="text-danger"></span>
+                </div>
+
                 <button type="submit" class="btn btn-primary">Add Product</button>
             </form>
         </div><!--end card-body-->
@@ -67,6 +80,10 @@
 @section custom_scripts{
     <script>
         new Selectr('#productColor', {
+            multiple: true
+        });
+
+        new Selectr('#productSize', {
             multiple: true
         });
     </script>
