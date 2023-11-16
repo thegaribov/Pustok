@@ -16,6 +16,8 @@
     <!-- CSS
     ============================================ -->
 
+
+
     <link rel="stylesheet" href="~/client/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/client/assets/css/font-awesome.min.css" />
     <link rel="stylesheet" href="~/client/assets/css/Pe-icon-7-stroke.css" />
@@ -25,8 +27,12 @@
     <link rel="stylesheet" href="~/client/assets/css/magnific-popup.min.css" />
     <link rel="stylesheet" href="~/client/assets/css/ion.rangeSlider.min.css" />
 
+    @RenderSection("custom_plugin_styles", false)
+
     <!-- Style CSS -->
     <link rel="stylesheet" href="~/client/assets/css/style.css" />
+
+      @RenderSection("custom_styles", false)
 </head>
 
 <body>
@@ -72,7 +78,11 @@
     <script src="~/client/assets/js/plugins/mailchimp-ajax.js"></script>
     <script src="~/client/assets/js/plugins/jquery.counterup.js"></script>
 
+    @RenderSection("custom_plugin_scripts", false)
+
     <!--Main JS (Common Activation Codes)-->
     <script src="~/client/assets/js/main.js"></script>
+
+    @RenderSection("custom_scripts", false)
 </body>
 </html>
