@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pustok.Database;
@@ -11,9 +12,10 @@ using Pustok.Database;
 namespace Pustok.Migrations
 {
     [DbContext(typeof(PustokDbContext))]
-    partial class PustokDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231116151743_ProductSize")]
+    partial class ProductSize
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,39 +205,12 @@ namespace Pustok.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
+                    b.Property<int>("Name")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.ToTable("Sizes", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = -1,
-                            Name = "S"
-                        },
-                        new
-                        {
-                            Id = -2,
-                            Name = "XS"
-                        },
-                        new
-                        {
-                            Id = -3,
-                            Name = "XXS"
-                        },
-                        new
-                        {
-                            Id = -4,
-                            Name = "L"
-                        },
-                        new
-                        {
-                            Id = -5,
-                            Name = "XL"
-                        });
                 });
 
             modelBuilder.Entity("Pustok.Database.DomainModels.Employee", b =>

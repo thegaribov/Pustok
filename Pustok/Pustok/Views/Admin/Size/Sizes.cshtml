@@ -1,0 +1,45 @@
+﻿@model List<Size>
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="col-sm-12">
+    <div class="page-title-box">
+        <div class="float-end">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Metrica</a>
+                </li><!--end nav-item-->
+                <li class="breadcrumb-item">
+                    <a href="#">Sizes</a>
+                </li><!--end nav-item-->
+                <li class="breadcrumb-item active">Sizes</li>
+            </ol>
+        </div>
+        <h4 class="page-title">Sizes</h4>
+    </div><!--end page-title-box-->
+</div><!--end col-->
+
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var size in Model)
+                        {
+                            <tr>
+                                <td>@size.Name</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table><!--end /table-->
+            </div><!--end /tableresponsive-->
+        </div><!--end card-body-->
+    </div><!--end card-->
+</div> <!-- end col -->

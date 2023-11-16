@@ -53,18 +53,6 @@
                     </select>
                     <span asp-validation-for="SelectedColorIds" class="text-danger"></span>
                 </div>
-
-                <div class="form-group">
-                    <label for="productColor">Sizes:</label>
-                    <select multiple asp-for="SelectedColorIds" id="productColor" class="form-control">
-                        @foreach (var color in Model.Colors)
-                        {
-                            <option value="@color.Id">@color.Name</option>
-
-                        }
-                    </select>
-                    <span asp-validation-for="SelectedColorIds" class="text-danger"></span>
-                </div>
                 <button type="submit" class="btn btn-primary">Add Product</button>
             </form>
         </div><!--end card-body-->
