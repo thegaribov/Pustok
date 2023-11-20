@@ -15,63 +15,23 @@
 
 <partial name="Partials/Client/_FooterPartialView" />
 
-
 @section custom_scripts{
     <script>
-        function ShowDetails(id){
-            let titleElement = $("#product-details-modal-title");
-            let priceElement = $("#product-details-modal-price");
-            let ratingContainerElement = $("#product-details-modal-rating-container");
-            let colorsElement = $("#product-details-modal-colors");
-            let sizesElement = $("#product-details-modal-sizes");
-            let modalElement = $("#product-details-modal")
+        function ShowDetails(id) {
+            let modalElement = $("#product-details-modal");
+            let modalBodyElement = $("#product-details-modal-body");
 
             $.ajax({
-                url: "https://localhost:7258/Product/ProductDetails?id=" + id,
-            })
-              .done(function( data ) {
-                    titleElement.html(data.name);
-                    priceElement.html(data.price);
+                url: "https://localhost:7258/Product/ProductDetailsModalView?id=" + id,
+                success: function (data) {
+                    modalBodyElement.html(data);
 
-                    colorsElement.html(GetColorsOptions(data));
-                    colorsElement.niceSelect('update');
-                    sizesElement.html(GetSizesOptions(data));
-                    sizesElement.niceSelect('update');
-
-                    ratingContainerElement.html(GetRatings(data));
+                    $("#product-details-modal-colors").niceSelect();
+                    $("#product-details-modal-sizes").niceSelect();
 
                     modalElement.modal('show');
-              });
-        }
-
-        function GetColorsOptions(data){
-            let optionsHtml = "";
-
-            data.colors.forEach(c => {
-                optionsHtml += `<option value="${c.id}">${c.name}</option>`
+                }
             });
-
-            return optionsHtml;
-        }
-
-        function GetSizesOptions(data){
-            let optionsHtml = "";
-
-            data.sizes.forEach(s => {
-                optionsHtml += `<option value="${s.id}">${s.name}</option>`
-            });
-
-            return optionsHtml;
-        }
-
-        function GetRatings(data){
-            let ratingsHtml = "";
-
-            for(let i=0; i<data.rating; i++){
-                ratingsHtml += `<li><i class="fa fa-star"></i></li>`
-            }
-
-            return ratingsHtml;
         }
 
     </script>

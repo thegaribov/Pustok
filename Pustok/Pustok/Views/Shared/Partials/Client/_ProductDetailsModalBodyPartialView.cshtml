@@ -1,4 +1,5 @@
-﻿<div class="modal-wrap row">
+﻿@model ProductDetailsViewModel
+<div class="modal-wrap row">
     <div class="col-lg-6">
         <div class="modal-img">
             <div class="swiper-container modal-slider">
@@ -37,19 +38,18 @@
     </div>
     <div class="col-lg-6 pt-5 pt-lg-0">
         <div class="single-product-content">
-            <h2 class="title" id="product-details-modal-title"></h2>
+            <h2 class="title" id="product-details-modal-title">@Model?.Name</h2>
             <div class="price-box">
                 <span class="new-price">$</span>
-                <span class="new-price" id="product-details-modal-price"></span>
+                <span class="new-price" id="product-details-modal-price">@Model?.Price</span>
             </div>
             <div class="rating-box-wrap">
                 <div class="rating-box">
                     <ul id="product-details-modal-rating-container">
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
+                        @for (int i = 0; i < Model?.Rating; i++)
+                        {
+                            <li><i class="fa fa-star"></i></li>
+                        }
                     </ul>
                 </div>
                 <div class="review-status">
@@ -59,11 +59,19 @@
             <div class="selector-wrap color-option">
                 <span class="selector-title border-bottom-0">Color</span>
                 <select id="product-details-modal-colors" class="nice-select wide border-bottom-0 rounded-0">
+                    @foreach (var color in Model?.Colors)
+                    {
+                        <option value="@color.Id">@color.Name</option>
+                    }
                 </select>
             </div>
             <div class="selector-wrap size-option">
                 <span class="selector-title">Size</span>
                 <select id="product-details-modal-sizes" class="nice-select wide rounded-0">
+                    @foreach (var size in Model?.Sizes)
+                    {
+                        <option value="@size.Id">@size.Name</option>
+                    }
                 </select>
             </div>
             <p class="short-desc">
