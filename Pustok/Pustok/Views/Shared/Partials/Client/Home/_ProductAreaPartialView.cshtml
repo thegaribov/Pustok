@@ -18,7 +18,7 @@
                                     </a>
                                     <div class="product-add-action">
                                         <ul>
-                                            <li class="quuickview-btn" data-bs-toggle="modal" data-bs-target="#quickModal" onclick="ShowDetails(@product.Id);">
+                                            <li class="quuickview-btn" data-bs-toggle="modal" data-bs-target="#quickModal" onclick="event.preventDefault(); ShowDetails(@product.Id);">
                                                 <a href="#" data-tippy="Quickview" data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder">
                                                     <i class="pe-7s-look"></i>
                                                 </a>
@@ -59,4 +59,4 @@
         </div>
     </div>
 </div>
-<!-- Product Area End Here -->
+

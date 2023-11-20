@@ -19,8 +19,60 @@
 @section custom_scripts{
     <script>
         function ShowDetails(id){
-            console.log("Hello")
-            console.log(id)
+            let titleElement = $("#product-details-modal-title");
+            let priceElement = $("#product-details-modal-price");
+            let ratingContainerElement = $("#product-details-modal-rating-container");
+            let colorsElement = $("#product-details-modal-colors");
+            let sizesElement = $("#product-details-modal-sizes");
+            let modalElement = $("#product-details-modal")
+
+            $.ajax({
+                url: "https://localhost:7258/Product/ProductDetails?id=" + id,
+            })
+              .done(function( data ) {
+                    titleElement.html(data.name);
+                    priceElement.html(data.price);
+
+                    colorsElement.html(GetColorsOptions(data));
+                    colorsElement.niceSelect('update');
+                    sizesElement.html(GetSizesOptions(data));
+                    sizesElement.niceSelect('update');
+
+                    ratingContainerElement.html(GetRatings(data));
+
+                    modalElement.modal('show');
+              });
         }
+
+        function GetColorsOptions(data){
+            let optionsHtml = "";
+
+            data.colors.forEach(c => {
+                optionsHtml += `<option value="${c.id}">${c.name}</option>`
+            });
+
+            return optionsHtml;
+        }
+
+        function GetSizesOptions(data){
+            let optionsHtml = "";
+
+            data.sizes.forEach(s => {
+                optionsHtml += `<option value="${s.id}">${s.name}</option>`
+            });
+
+            return optionsHtml;
+        }
+
+        function GetRatings(data){
+            let ratingsHtml = "";
+
+            for(let i=0; i<data.rating; i++){
+                ratingsHtml += `<li><i class="fa fa-star"></i></li>`
+            }
+
+            return ratingsHtml;
+        }
+
     </script>
 }
