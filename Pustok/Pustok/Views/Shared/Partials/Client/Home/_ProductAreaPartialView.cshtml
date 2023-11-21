@@ -1,4 +1,5 @@
-﻿<!-- Begin Product Area -->
+﻿@model List<Product>
+<!-- Begin Product Area -->
 <div class="product-area section-space-top-100">
     <div class="container">
         <div class="section-title-wrap">
@@ -13,8 +14,8 @@
                             <div class="product-item">
                                 <div class="product-img">
                                     <a asp-controller="Product" asp-action="SingleProduct" asp-route-id="@product.Id">
-                                        <img class="primary-img" src="~/client/assets/images/website-images//1-1-270x300.jpg" alt="Product Images" />
-                                        <img class="secondary-img" src="~/client/assets/images/website-images//1-2-270x300.jpg" alt="Product Images" />
+                                        <img class="primary-img" src="@UploadDirectory.Products.GetAbsolutePath(product.ImageNameInFileSystem)" alt="Product Images" />
+                                        @*<img class="secondary-img" src="~/client/assets/images/website-images//1-2-270x300.jpg" alt="Product Images" />*@
                                     </a>
                                     <div class="product-add-action">
                                         <ul>

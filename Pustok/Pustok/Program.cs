@@ -5,6 +5,7 @@ using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Services;
 using Pustok.Services.Abstract;
+using Pustok.Services.Concretes;
 
 namespace Pustok;
 
@@ -27,6 +28,7 @@ public class Program
 
         builder.Services
             .AddScoped<IEmployeeService, EmployeeServiceImp>()
+            .AddScoped<IFileService, FileService>()
             .AddDbContext<PustokDbContext>(o =>
             {
                 o.UseNpgsql(DatabaseConstants.CONNECTION_STRING);

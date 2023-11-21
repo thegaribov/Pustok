@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
+using Pustok.Services.Abstract;
 using Pustok.ViewModels.Product;
 using System;
 using System.IO;
@@ -16,13 +18,16 @@ public class ProductController : Controller
 {
     private readonly PustokDbContext _pustokDbContext;
     private readonly ILogger<ProductController> _logger;
+    private readonly IFileService _fileService;
 
     public ProductController(
         PustokDbContext pustokDbContext,
-        ILogger<ProductController> logger)
+        ILogger<ProductController> logger,
+        IFileService fileService)
     {
         _pustokDbContext = pustokDbContext;
         _logger = logger;
+        _fileService = fileService;
     }
 
     #region Products
@@ -128,11 +133,7 @@ public class ProductController : Controller
             }
 
 
-            string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(model.Image.FileName)}";
-
-            string absolutePath = @$"C:\Users\qarib\Desktop\Code academy\Pustok\Pustok\Pustok\wwwroot\custom-images\products\{uniqueFileName}";
-            using FileStream fileStream = new FileStream(absolutePath, FileMode.Create);
-            model.Image.CopyTo(fileStream);
+            string uniqueFileName = _fileService.Upload(model.Image, UploadDirectory.Products);
 
             product.ImageName = model.Image.FileName;
             product.ImageNameInFileSystem = uniqueFileName;
@@ -270,17 +271,10 @@ public class ProductController : Controller
 
         if (model.Image != null)
         {
-            string oldImageAbsolutePath = @$"C:\Users\qarib\Desktop\Code academy\Pustok\Pustok\Pustok\wwwroot\custom-images\products\{product.ImageNameInFileSystem}";
-            System.IO.File.Delete(oldImageAbsolutePath);
-
-            string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(model.Image.FileName)}";
-            string newImageAbsolutePath = @$"C:\Users\qarib\Desktop\Code academy\Pustok\Pustok\Pustok\wwwroot\custom-images\products\{uniqueFileName}";
-            using FileStream fileStream = new FileStream(newImageAbsolutePath, FileMode.Create);
-            model.Image.CopyTo(fileStream);
-
+            _fileService.Delete(UploadDirectory.Products, product.ImageNameInFileSystem);
 
             product.ImageName = model.Image.FileName;
-            product.ImageNameInFileSystem = uniqueFileName;
+            product.ImageNameInFileSystem = _fileService.Upload(model.Image, UploadDirectory.Products);
         }
 
         #endregion
@@ -322,6 +316,8 @@ public class ProductController : Controller
         _pustokDbContext.Remove(product);
         _pustokDbContext.SaveChanges();
 
+        _fileService
+            .Delete(UploadDirectory.Products, product.ImageNameInFileSystem);
 
         return RedirectToAction("Products");
     }

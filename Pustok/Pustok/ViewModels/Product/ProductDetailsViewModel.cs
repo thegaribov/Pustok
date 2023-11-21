@@ -8,6 +8,7 @@ namespace Pustok.ViewModels.Product
         public string Name { get; set; }
         public decimal Price { get; set; }
         public int Rating { get; set; }
+        public string ImageNameInFileSystem { get; set; }
 
         public string CategoryName { get; set; }
         public List<ColorDetailsViewModel> Colors { get; set; }

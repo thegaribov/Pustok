@@ -51,7 +51,7 @@
                         {
                             <tr>
                                 <td>
-                                    <img src="~/custom-images/products/@product.ImageNameInFileSystem" class="rounded-circle thumb-lg me-1">
+                                    <img src="@UploadDirectory.Products.GetAbsolutePath(product.ImageNameInFileSystem)" class="rounded-circle thumb-lg me-1">
                                     @product.Name
                                 </td>
                                 <td>@product.Category.Name</td>

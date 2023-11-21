@@ -96,6 +96,7 @@ public class ProductController : Controller
             Price = product.Price,
             Rating = product.Rating,
             CategoryName = product.Category.Name,
+            ImageNameInFileSystem = product.ImageNameInFileSystem,
             Colors = product.ProductColors
                 .Select(pc =>
                     new ProductDetailsViewModel.ColorDetailsViewModel
