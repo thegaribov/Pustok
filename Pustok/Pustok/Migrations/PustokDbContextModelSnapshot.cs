@@ -53,7 +53,7 @@ namespace Pustok.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Colors");
+                    b.ToTable("Colors", (string)null);
 
                     b.HasData(
                         new
@@ -91,7 +91,7 @@ namespace Pustok.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("Pustok.Database.DomainModels.Employee", b =>
@@ -130,7 +130,7 @@ namespace Pustok.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("Pustok.Database.DomainModels.Product", b =>

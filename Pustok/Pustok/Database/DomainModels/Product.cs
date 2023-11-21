@@ -9,10 +9,7 @@ namespace Pustok.Database.DomainModels;
 public class Product : IEntity
 {
     public Product()
-        : this(default, default, default)
-    {
-
-    }
+        : this(default, default, default) { }
 
     public Product(string name, decimal price, int rating)
     {
@@ -36,6 +33,13 @@ public class Product : IEntity
     [Column("categoryid")]
     public int? CategoryId { get; set; }
     public Category Category { get; set; }
+
+    [Column("imagename")]
+    public string ImageName { get; set; }
+
+    [Column("imagenameinfilesystem")]
+    public string ImageNameInFileSystem { get; set; }
+
 
     public List<ProductColor> ProductColors { get; set; }
     public List<ProductSize> ProductSizes { get; set; }

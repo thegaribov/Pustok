@@ -5,6 +5,8 @@ using Npgsql;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.ViewModels.Product;
+using System;
+using System.IO;
 using System.Linq;
 
 namespace Pustok.Controllers.Admin;
@@ -125,6 +127,16 @@ public class ProductController : Controller
                 _pustokDbContext.ProductSizes.Add(productSize);
             }
 
+
+            string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(model.Image.FileName)}";
+
+            string absolutePath = @$"C:\Users\qarib\Desktop\Code academy\Pustok\Pustok\Pustok\wwwroot\custom-images\products\{uniqueFileName}";
+            using FileStream fileStream = new FileStream(absolutePath, FileMode.Create);
+            model.Image.CopyTo(fileStream);
+
+            product.ImageName = model.Image.FileName;
+            product.ImageNameInFileSystem = uniqueFileName;
+
             _pustokDbContext.SaveChanges();
 
         }
@@ -164,7 +176,8 @@ public class ProductController : Controller
             SelectedColorIds = product.ProductColors.Select(pc => pc.ColorId).ToArray(),
             Colors = _pustokDbContext.Colors.ToList(),
             SelectedSizeIds = product.ProductSizes.Select(ps => ps.SizeId).ToArray(),
-            Sizes = _pustokDbContext.Sizes.ToList()
+            Sizes = _pustokDbContext.Sizes.ToList(),
+            ImageNameInFileSystem = product.ImageNameInFileSystem
         };
 
         return View("Views/Admin/Product/ProductEdit.cshtml", model);
@@ -250,6 +263,25 @@ public class ProductController : Controller
         });
 
         product.ProductSizes.AddRange(newProductSize);
+
+        #endregion
+
+        #region Image
+
+        if (model.Image != null)
+        {
+            string oldImageAbsolutePath = @$"C:\Users\qarib\Desktop\Code academy\Pustok\Pustok\Pustok\wwwroot\custom-images\products\{product.ImageNameInFileSystem}";
+            System.IO.File.Delete(oldImageAbsolutePath);
+
+            string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(model.Image.FileName)}";
+            string newImageAbsolutePath = @$"C:\Users\qarib\Desktop\Code academy\Pustok\Pustok\Pustok\wwwroot\custom-images\products\{uniqueFileName}";
+            using FileStream fileStream = new FileStream(newImageAbsolutePath, FileMode.Create);
+            model.Image.CopyTo(fileStream);
+
+
+            product.ImageName = model.Image.FileName;
+            product.ImageNameInFileSystem = uniqueFileName;
+        }
 
         #endregion
 

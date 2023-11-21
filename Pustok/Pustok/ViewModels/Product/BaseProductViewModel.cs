@@ -1,4 +1,5 @@
-﻿using Pustok.Database.DomainModels;
+﻿using Microsoft.AspNetCore.Http;
+using Pustok.Database.DomainModels;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -22,4 +23,7 @@ public abstract class BaseProductViewModel
 
     public int[] SelectedSizeIds { get; set; }
     public List<Size> Sizes { get; set; }
+
+    public IFormFile Image { get; set; }
+    public string ImageNameInFileSystem { get; set; }
 }

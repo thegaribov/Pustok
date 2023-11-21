@@ -14,7 +14,7 @@
             <p class="text-muted mb-0">Update Product.</p>
         </div><!--end card-header-->
         <div class="card-body">
-            <form asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Id"  method="POST">
+            <form enctype="multipart/form-data" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Id"  method="POST">
                 <div class="form-group">
                     <label asp-for="Name">Product Name:</label>
                     <input asp-for="Name" type="text" class="form-control" id="productName" placeholder="Enter product name">
@@ -66,6 +66,17 @@
                         }
                     </select>
                     <span asp-validation-for="SelectedSizeIds" class="text-danger"></span>
+                </div>
+
+
+                <div class="form-group">
+                    <label asp-for="Image">Image:</label>
+                    <input asp-for="Image" type="file" class="form-control" id="productImage">
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+
+                <div class="form-group" >
+                    <img src="~/custom-images/products/@Model.ImageNameInFileSystem" class="rounded-circle thumb-lg me-1">
                 </div>
 
                 <button type="submit" class="btn btn-primary">Update</button>
