@@ -14,7 +14,7 @@
                             <div class="product-item">
                                 <div class="product-img">
                                     <a asp-controller="Product" asp-action="SingleProduct" asp-route-id="@product.Id">
-                                        <img class="primary-img" src="@UploadDirectory.Products.GetAbsolutePath(product.ImageNameInFileSystem)" alt="Product Images" />
+                                        <img class="primary-img" src="@UploadDirectory.Products.GetUrl(product.ImageNameInFileSystem)" alt="Product Images" />
                                         @*<img class="secondary-img" src="~/client/assets/images/website-images//1-2-270x300.jpg" alt="Product Images" />*@
                                     </a>
                                     <div class="product-add-action">
@@ -25,13 +25,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="cart.html"
-                                               data-tippy="Add to cart"
-                                               data-tippy-inertia="true"
-                                               data-tippy-animation="shift-away"
-                                               data-tippy-delay="50"
-                                               data-tippy-arrow="true"
-                                               data-tippy-theme="sharpborder">
+                                                <a asp-controller="basket" asp-action="AddProduct" asp-route-productId="@product.Id" >
                                                     <i class="pe-7s-cart"></i>
                                                 </a>
                                             </li>

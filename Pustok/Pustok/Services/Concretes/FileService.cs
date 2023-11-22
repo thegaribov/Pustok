@@ -4,6 +4,7 @@ using Pustok.Extensions;
 using Pustok.Services.Abstract;
 using System;
 using System.IO;
+using System.Net.Sockets;
 
 namespace Pustok.Services.Concretes
 {
@@ -11,7 +12,7 @@ namespace Pustok.Services.Concretes
     {
         public string Upload(IFormFile file, string path)
         {
-            var uniqueFileName = GetUniqueFileName();
+            var uniqueFileName = GetUniqueFileName(file.FileName);
             var uploadPath = Path.Combine(path, uniqueFileName);
             using FileStream fileStream = new FileStream(uploadPath, FileMode.Create);
             file.CopyTo(fileStream);
@@ -21,13 +22,13 @@ namespace Pustok.Services.Concretes
       
         public string Upload(IFormFile file, UploadDirectory uploadDir)
         {
-            var uniqueFileName = GetUniqueFileName();
+            var uniqueFileName = GetUniqueFileName(file.FileName);
             var uploadPath = uploadDir.GetAbsolutePath(uniqueFileName);
             using FileStream fileStream = new FileStream(uploadPath, FileMode.Create);
             file.CopyTo(fileStream);
 
             return uniqueFileName;
-        }
+        } 
 
         public void Delete(string path)
         {
@@ -41,9 +42,9 @@ namespace Pustok.Services.Concretes
             Delete(absolutePath);
         }
 
-        private string GetUniqueFileName()
+        private string GetUniqueFileName(string originalFileName)
         {
-            return Guid.NewGuid().ToString();
+            return $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
         }
     }
 }

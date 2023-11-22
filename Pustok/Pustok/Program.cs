@@ -28,7 +28,10 @@ public class Program
 
         builder.Services
             .AddScoped<IEmployeeService, EmployeeServiceImp>()
-            .AddScoped<IFileService, FileService>()
+            .AddScoped<IUserService, UserService>()
+            .AddSingleton<IFileService, FileService>()
+            .AddScoped<IProductService, ProductService>()
+            .AddScoped<IBasketService, BasketService>()
             .AddDbContext<PustokDbContext>(o =>
             {
                 o.UseNpgsql(DatabaseConstants.CONNECTION_STRING);
