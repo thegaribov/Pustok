@@ -4,6 +4,7 @@ using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.Services.Abstract;
 using Pustok.Services.Concretes;
+using Pustok.ViewModels.Product;
 using System.Linq;
 
 namespace Pustok.Controllers.Client
@@ -48,6 +49,92 @@ namespace Pustok.Controllers.Client
 
             return RedirectToAction("index", "home");
         }
+
+        [HttpGet("remove-basket-product/{basketProductId}")]
+        public IActionResult RemoveBasketProduct(int basketProductId)
+        {
+            var basketProduct = _pustokDbContext
+                .BasketProducts
+                .FirstOrDefault(bp =>
+                    bp.UserId == _userService.GetCurrentLoggedUser().Id &&
+                    bp.Id == basketProductId);
+
+            if (basketProduct == null)
+            {
+                return NotFound();
+            }
+
+            _pustokDbContext.BasketProducts.Remove(basketProduct);
+            _pustokDbContext.SaveChanges();
+
+            return RedirectToAction("cart", "basket");
+        }
+
+        [HttpGet("increase-basket-product/{basketProductId}")]
+        public IActionResult IncreaseBasketProductQuantity(int basketProductId)
+        {
+            var basketProduct = _pustokDbContext
+                .BasketProducts
+                .Include(bp => bp.Product)
+                .FirstOrDefault(bp =>
+                    bp.UserId == _userService.GetCurrentLoggedUser().Id &&
+                    bp.Id == basketProductId);
+
+            if (basketProduct == null)
+            {
+                return NotFound();
+            }
+
+            basketProduct.Quantity++;
+
+            _pustokDbContext.SaveChanges();
+
+            return Json(new BasketQuantityUpdateResponseViewModel
+            {
+                Total = basketProduct.Quantity * basketProduct.Product.Price,
+                Quantity = basketProduct.Quantity
+            });
+        }
+
+        [HttpGet("decrease-basket-product/{basketProductId}")]
+        public IActionResult DecreaseBasketProductQuantity(int basketProductId)
+        {
+            var basketProduct = _pustokDbContext
+                .BasketProducts
+                .Include(bp => bp.Product)
+                .FirstOrDefault(bp =>
+                    bp.UserId == _userService.GetCurrentLoggedUser().Id &&
+                    bp.Id == basketProductId);
+
+            if (basketProduct == null)
+            {
+                return NotFound();
+            }
+
+            basketProduct.Quantity--;
+
+
+            if (basketProduct.Quantity <= 0)
+            {
+                _pustokDbContext.BasketProducts.Remove(basketProduct);
+                _pustokDbContext.SaveChanges();
+
+                return NoContent();
+            }
+            else
+            {
+                _pustokDbContext.SaveChanges();
+
+                var updateResponseViewModel = new BasketQuantityUpdateResponseViewModel
+                {
+                    Total = basketProduct.Quantity * basketProduct.Product.Price,
+                    Quantity = basketProduct.Quantity
+                };
+
+                return Json(updateResponseViewModel);
+            }
+        }
+
 
 
         [HttpGet("cart")]

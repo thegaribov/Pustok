@@ -6,7 +6,7 @@
 <!-- Begin Main Content Area -->
 <main class="main-content">
     <div class="breadcrumb-area breadcrumb-height"
-         data-bg-image="assets/images/breadcrumb/bg/1-1-1919x388.jpg">
+         data-bg-image="/client/assets/images/breadcrumb/bg/1-1-1919x388.jpg">
         <div class="container h-100">
             <div class="row h-100">
                 <div class="col-lg-12">
@@ -44,9 +44,9 @@
                                     @foreach (var basketProduct in Model)
                                     {
 
-                                        <tr>
+                                        <tr class="product-details">
                                             <td class="product_remove">
-                                                <a href="#">
+                                                <a asp-controller="Basket" asp-action="RemoveBasketProduct" asp-route-basketProductId="@basketProduct.Id">
                                                     <i class="pe-7s-close"
                                                    data-tippy="Remove"
                                                    data-tippy-inertia="true"
@@ -57,7 +57,7 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <a href="#" class="w-25" >
+                                                <a href="#" class="w-25">
                                                     <img width="120" src="@UploadDirectory.Products.GetUrl(basketProduct.Product.ImageNameInFileSystem)" alt="Cart Thumbnail" />
                                                 </a>
                                             </td>
@@ -69,15 +69,9 @@
                                             </td>
                                             <td class="quantity">
                                                 <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box"
+                                                    <input class="product-quantity cart-plus-minus-box" data-basket-product-id="@basketProduct.Id"
                                                        value="@basketProduct.Quantity"
                                                        type="text" />
-                                                    <div class="dec qtybutton">
-                                                        <i class="fa fa-minus"></i>
-                                                    </div>
-                                                    <div class="inc qtybutton">
-                                                        <i class="fa fa-plus"></i>
-                                                    </div>
                                                 </div>
                                             </td>
                                             <td class="product-subtotal">
@@ -93,22 +87,11 @@
                             <div class="col-12">
                                 <div class="coupon-all">
                                     <div class="coupon">
-                                        <input id="coupon_code"
-                                               class="input-text"
-                                               name="coupon_code"
-                                               value=""
-                                               placeholder="Coupon code"
-                                               type="text" />
-                                        <input class="button mt-xxs-30"
-                                               name="apply_coupon"
-                                               value="Apply coupon"
-                                               type="submit" />
+                                        <input id="coupon_code" class="input-text" name="coupon_code" value="" placeholder="Coupon code" type="text" />
+                                        <input class="button mt-xxs-30" name="apply_coupon" value="Apply coupon" type="submit" />
                                     </div>
                                     <div class="coupon2">
-                                        <input class="button"
-                                               name="update_cart"
-                                               value="Update cart"
-                                               type="submit" />
+                                        <input class="button" name="update_cart" value="Update cart" type="submit" />
                                     </div>
                                 </div>
                             </div>
@@ -118,8 +101,8 @@
                                 <div class="cart-page-total">
                                     <h2>Cart totals</h2>
                                     <ul>
-                                        <li>Subtotal <span>$79.35</span></li>
-                                        <li>Total <span>$79.35</span></li>
+                                        <li>Subtotal <span>$@Model.Sum(bp => bp.Quantity * bp.Product.Price)</span></li>
+                                        <li>Total <span>$@Model.Sum(bp => bp.Quantity * bp.Product.Price)</span></li>
                                     </ul>
                                     <a href="#">Proceed to checkout</a>
                                 </div>
@@ -132,3 +115,6 @@
     </div>
 </main>
 <!-- Main Content Area End Here -->
+@section custom_scripts{
+    <script src="~/client/assets/js/basket-product-quantity-update.js" asp-append-version="true" ></script>
+}
