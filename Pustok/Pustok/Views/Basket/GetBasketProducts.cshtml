@@ -104,7 +104,7 @@
                                         <li>Subtotal <span>$@Model.Sum(bp => bp.Quantity * bp.Product.Price)</span></li>
                                         <li>Total <span>$@Model.Sum(bp => bp.Quantity * bp.Product.Price)</span></li>
                                     </ul>
-                                    <a href="#">Proceed to checkout</a>
+                                    <a asp-controller="Order" asp-action="Execute">Proceed to order</a>
                                 </div>
                             </div>
                         </div>
@@ -116,5 +116,5 @@
 </main>
 <!-- Main Content Area End Here -->
 @section custom_scripts{
-    <script src="~/client/assets/js/basket-product-quantity-update.js" asp-append-version="true" ></script>
+    <script src="~/client/assets/js/basket-product-quantity-update.js" asp-append-version="true"></script>
 }

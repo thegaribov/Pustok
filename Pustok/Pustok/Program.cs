@@ -32,6 +32,7 @@ public class Program
             .AddSingleton<IFileService, FileService>()
             .AddScoped<IProductService, ProductService>()
             .AddScoped<IBasketService, BasketService>()
+            .AddScoped<IOrderService, OrderService>()
             .AddDbContext<PustokDbContext>(o =>
             {
                 o.UseNpgsql(DatabaseConstants.CONNECTION_STRING);
