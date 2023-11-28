@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,13 @@ public class Program
             .AddRazorRuntimeCompilation();
 
         builder.Services
+            .AddAuthentication("Cookies")
+            .AddCookie("Cookies");
+
+        builder.Services.AddAuthorization();
+            
+        builder.Services
+            .AddHttpContextAccessor()
             .AddScoped<IEmployeeService, EmployeeServiceImp>()
             .AddScoped<IUserService, UserService>()
             .AddSingleton<IFileService, FileService>()
@@ -43,7 +51,11 @@ public class Program
 
         var app = builder.Build();
 
+
         app.UseStaticFiles();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         //app.MapGet("/", () => Results.Content(myHtml, "text/html"));
         //app.MapGet("/contact", () => "This is my contact : +994.."); //text/plain

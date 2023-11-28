@@ -4,5 +4,7 @@ namespace Pustok.Services.Abstract;
 
 public interface IUserService
 {
-    User GetCurrentLoggedUser();
+    User CurrentUser { get; }
+    bool IsAuthenticateed { get; }
+    string GetFullName(User user);
 }

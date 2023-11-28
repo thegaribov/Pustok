@@ -24,7 +24,7 @@ public class DashboardController : Controller
         var orders = _pustokDbContext.Orders
             .Include(o => o.OrderProducts)
                 .ThenInclude(op => op.Product)
-            .Where(o => o.User == _userService.GetCurrentLoggedUser())
+            .Where(o => o.User == _userService.CurrentUser)
             .ToList();
 
         return View(orders);
@@ -34,7 +34,7 @@ public class DashboardController : Controller
     public IActionResult OrderDetails(int id)
     {
         var orderProducts = _pustokDbContext.OrderProducts
-            .Where(op => op.OrderId == id && op.Order.User == _userService.GetCurrentLoggedUser())
+            .Where(op => op.OrderId == id && op.Order.User == _userService.CurrentUser)
             .Include(op => op.Product)
             .Include(op => op.Product.Category)
             .Include(op => op.Size)
@@ -44,8 +44,12 @@ public class DashboardController : Controller
         return View(orderProducts);
     }
 
+    [HttpGet("index")]
     public IActionResult Index()
     {
+        
+
+
         return View();
     }
 }

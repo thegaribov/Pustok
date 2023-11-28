@@ -1,0 +1,41 @@
+﻿@model List<BasketProduct>
+
+<div class="offcanvas-minicart_wrapper" id="miniCart">
+    <div class="offcanvas-body">
+        <div class="minicart-content">
+            <div class="minicart-heading">
+                <h4 class="mb-0">Shopping Cart</h4>
+                <a href="#" class="button-close">
+                    <i class="pe-7s-close"></i>
+                </a>
+            </div>
+            <ul class="minicart-list">
+                @foreach (var basketProduct in Model)
+                {
+                    <li class="minicart-product">
+                        <a class="product-item_remove" href="#">
+                            <i class="pe-7s-close"></i>
+                        </a>
+                        <a href="single-product-variable.html" class="product-item_img">
+                            <img class="img-full"
+                             src="@UploadDirectory.Products.GetUrl(basketProduct.Product.ImageNameInFileSystem)"
+                             alt="Product Image" />
+                        </a>
+                        <div class="product-item_content">
+                            <a class="product-item_title" href="single-product-variable.html">@basketProduct.Product.Name</a>
+                            <span class="product-item_quantity">@basketProduct.Quantity x $@basketProduct.Product.Price</span>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="minicart-item_total">
+            <span>Subtotal</span>
+            <span class="ammount">$@Model.Sum(p => p.Quantity * p.Product.Price)</span>
+        </div>
+        <div class="group-btn_wrap d-grid gap-2">
+            <a href="cart.html" class="btn btn-dark">View Cart</a>
+            <a href="checkout.html" class="btn btn-dark">Checkout</a>
+        </div>
+    </div>
+</div>

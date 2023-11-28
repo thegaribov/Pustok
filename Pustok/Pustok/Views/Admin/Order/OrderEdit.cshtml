@@ -1,0 +1,49 @@
+﻿@model Order
+@inject IUserService userService
+@{
+    Layout = "_AdminLayout";
+}
+
+@section custom_plugings{
+    <link href="~/admin/assets/plugins/select/selectr.min.css" rel="stylesheet" type="text/css" />
+}
+
+
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-header">
+            <p class="text-muted mb-0">Update Product.</p>
+        </div><!--end card-header-->
+        <div class="card-body">
+            <form method="POST"  asp-controller="Order" asp-action="Edit" asp-route-id="@Model.Id" method="POST">
+                <div class="form-group">
+                    <label asp-for="TrackingCode">Product Name:</label>
+                    <input readonly asp-for="TrackingCode" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>User Name</label>
+                    <input readonly type="text" class="form-control" value="@userService.GetFullName(Model.User)">
+                </div>
+                <div class="form-group">
+                    <label>Created at</label>
+                    <input readonly type="text" class="form-control" value="@Model.CreatedAt.ToLongDateString()">
+                </div>
+                <div class="form-group">
+                    <label>Total</label>
+                    <input readonly type="text" class="form-control" value="@Model.OrderProducts.Sum(op => op.Quantity * op.Product.Price)">
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Categories:</label>
+                    <select asp-for="Status" asp-items="@Html.GetEnumSelectList<OrderStatus>()" class="form-control">
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+        </div><!--end card-body-->
+    </div><!--end card-->
+</div>
+
+@section custom_plugin_scripts{
+    <script src="~/admin/assets/plugins/select/selectr.min.js"></script>
+}

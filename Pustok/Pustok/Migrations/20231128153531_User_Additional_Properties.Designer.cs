@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pustok.Database;
@@ -11,9 +12,10 @@ using Pustok.Database;
 namespace Pustok.Migrations
 {
     [DbContext(typeof(PustokDbContext))]
-    partial class PustokDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231128153531_User_Additional_Properties")]
+    partial class User_Additional_Properties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -373,18 +375,8 @@ namespace Pustok.Migrations
                         new
                         {
                             Id = -1,
-                            Email = "super_admin@gmail.com",
                             LastName = "Admin",
-                            Name = "Admin",
-                            Password = "123321"
-                        },
-                        new
-                        {
-                            Id = -2,
-                            Email = "moderator@gmail.com",
-                            LastName = "Moderator",
-                            Name = "Moderator",
-                            Password = "123321"
+                            Name = "Admin"
                         });
                 });
 

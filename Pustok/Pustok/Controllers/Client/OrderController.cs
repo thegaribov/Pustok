@@ -32,12 +32,12 @@ public class OrderController : Controller
         {
             CreatedAt = DateTime.UtcNow,
             Status = OrderStatus.New,
-            User = _userService.GetCurrentLoggedUser(),
+            User = _userService.CurrentUser,
             TrackingCode = _orderService.GenerateAndGetTrackingCode(),
         };
 
         var basketProducts = _pustokDbContext.BasketProducts
-            .Where(bp => bp.User == _userService.GetCurrentLoggedUser())
+            .Where(bp => bp.User == _userService.CurrentUser)
             .ToList();
 
         order.OrderProducts = basketProducts
