@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pustok.Database;
 using Pustok.Services.Abstract;
@@ -7,6 +8,7 @@ using System.Linq;
 namespace Pustok.Controllers.Client;
 
 [Route("dashboard")]
+[Authorize]
 public class DashboardController : Controller
 {
     private readonly PustokDbContext _pustokDbContext;

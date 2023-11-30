@@ -37,11 +37,6 @@ public class UserService : IUserService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public void IsAuthenticated()
-    {
-
-    }
-
     private User GetCurrentLoggedUser()
     {
         var currentUserId = _httpContextAccessor.HttpContext.User
@@ -53,5 +48,10 @@ public class UserService : IUserService
     public string GetFullName(User user)
     {
         return user.Name + " " + user.LastName;
+    }
+
+    public string GetCurrentUserFullName()
+    {
+        return GetFullName(CurrentUser);
     }
 }

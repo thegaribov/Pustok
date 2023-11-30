@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
@@ -12,6 +13,7 @@ namespace Pustok.Controllers.Admin;
 
 
 [Route("admin/employees")]
+[Authorize]
 public class EmployeeController : Controller
 {
     private readonly PustokDbContext _dbContext;

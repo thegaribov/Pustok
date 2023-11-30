@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Pustok.Contracts;
@@ -11,6 +12,7 @@ using System.Linq;
 namespace Pustok.Controllers.Admin;
 
 [Route("admin/orders")]
+[Authorize]
 public class OrderController : Controller
 {
     private readonly PustokDbContext _pustokDbContext;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
@@ -9,6 +10,7 @@ using System.Linq;
 namespace Pustok.Controllers.Client;
 
 [Route("order")]
+[Authorize]
 public class OrderController : Controller
 {
     private readonly PustokDbContext _pustokDbContext;

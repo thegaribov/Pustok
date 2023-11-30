@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Pustok.Database;
 using System.Linq;
 
@@ -6,6 +7,7 @@ namespace Pustok.Controllers.Admin;
 
 
 [Route("admin/colors")]
+[Authorize]
 public class ColorController : Controller
 {
     private readonly PustokDbContext _pustokDbContext;
