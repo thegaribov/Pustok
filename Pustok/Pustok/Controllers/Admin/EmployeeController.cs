@@ -13,7 +13,7 @@ namespace Pustok.Controllers.Admin;
 
 
 [Route("admin/employees")]
-[Authorize]
+[Authorize(Roles = "admin")]
 public class EmployeeController : Controller
 {
     private readonly PustokDbContext _dbContext;

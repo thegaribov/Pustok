@@ -100,7 +100,8 @@ public class PustokDbContext : DbContext
                     Name = "Admin",
                     LastName = "Admin",
                     Email = "super_admin@gmail.com",
-                    Password = "123321"
+                    Password = "123321",
+                    IsAdmin = true
                 },
                  new User
                  {
@@ -108,7 +109,8 @@ public class PustokDbContext : DbContext
                      Name = "Moderator",
                      LastName = "Moderator",
                      Email = "moderator@gmail.com",
-                     Password = "123321"
+                     Password = "123321",
+                     IsAdmin = true
                  }
                 );
 

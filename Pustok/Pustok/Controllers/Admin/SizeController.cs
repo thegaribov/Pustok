@@ -6,7 +6,7 @@ using System.Linq;
 namespace Pustok.Controllers.Admin;
 
 [Route("admin/sizes")]
-[Authorize]
+[Authorize(Roles = "admin")]
 public class SizeController : Controller
 {
     private readonly PustokDbContext _pustokDbContext;

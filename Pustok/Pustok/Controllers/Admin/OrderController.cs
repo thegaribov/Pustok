@@ -12,7 +12,7 @@ using System.Linq;
 namespace Pustok.Controllers.Admin;
 
 [Route("admin/orders")]
-[Authorize]
+[Authorize(Roles = "admin")]
 public class OrderController : Controller
 {
     private readonly PustokDbContext _pustokDbContext;
