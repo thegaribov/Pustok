@@ -1,0 +1,39 @@
+﻿@model UserUpdateViewModel
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-header">
+            <p class="text-muted mb-0">Update User.</p>
+        </div><!--end card-header-->
+        <div class="card-body">
+            <form asp-controller="User" asp-action="Edit" asp-route-id="@Model.Id" method="POST">
+                <div class="form-group">
+                    <label asp-for="Name">User Name:</label>
+                    <input asp-for="Name" type="text" class="form-control" id="userName" placeholder="Enter user name">
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName">Last Name:</label>
+                    <input asp-for="LastName" type="text" class="form-control" id="userLastName" placeholder="Enter last name">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email">Email:</label>
+                    <input asp-for="Email" readonly type="text" class="form-control" id="userEmail" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <div class="form-check form-switch">
+                        <input asp-for="IsAdmin" class="form-check-input" type="checkbox" id="adminCheckbox">
+                        <label asp-for="IsAdmin" class="form-check-label" for="adminCheckbox">Is admin</label>
+                    </div>
+                </div>
+
+                <!-- Add or remove fields based on your User model properties -->
+
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+        </div><!--end card-body-->
+    </div><!--end card-->
+</div>
+

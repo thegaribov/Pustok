@@ -31,8 +31,15 @@ public class AuthController : Controller
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         var user = _pustokDbContext.Users
-            .FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
+            .FirstOrDefault(u => u.Email == model.Email);
         if (user == null)
+        {
+            ModelState.AddModelError("Email", "Password or email is wrong");
+
+            return View();
+        }
+
+        if (!BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
         {
             ModelState.AddModelError("Email", "Password or email is wrong");
 
@@ -86,7 +93,7 @@ public class AuthController : Controller
             Name = model.Name,
             LastName = model.LastName,
             Email = model.Email,
-            Password = model.Password,
+            Password = BCrypt.Net.BCrypt.HashPassword(model.Password)
         };
 
         _pustokDbContext.Users.Add(user);
