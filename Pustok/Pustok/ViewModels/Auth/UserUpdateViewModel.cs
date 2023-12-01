@@ -1,4 +1,7 @@
-﻿namespace Pustok.ViewModels.Auth;
+﻿using Pustok.Contracts;
+using System.Collections.Generic;
+
+namespace Pustok.ViewModels.Auth;
 
 public class UserUpdateViewModel
 {
@@ -6,5 +9,5 @@ public class UserUpdateViewModel
     public string Name { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
-    public bool IsAdmin { get; set; }
+    public Role[] SelectedRoles { get; set; }
 }

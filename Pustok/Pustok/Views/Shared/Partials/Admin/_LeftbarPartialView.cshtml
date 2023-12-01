@@ -1,4 +1,6 @@
-﻿ <!-- leftbar-tab-menu -->
+﻿@inject IUserService userService
+
+<!-- leftbar-tab-menu -->
 <div class="leftbar-tab-menu">
     <div class="main-icon-menu">
         <a href="index.html" class="logo logo-metrica d-block text-center">
@@ -47,10 +49,20 @@
 
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a asp-controller="Product" asp-action="Products" class="nav-link">Products</a>
-                        <a asp-controller="Employee" asp-action="Employees" class="nav-link">Employees</a>
-                        <a asp-controller="Color" asp-action="Colors" class="nav-link">Colors</a>
-                        <a asp-controller="Size" asp-action="Sizes" class="nav-link">Sizes</a>
+                        @if (userService.IsCurrentUserInRole(RoleNames.SuperAdmin, RoleNames.Moderator))
+                        {
+                            <a asp-controller="Product" asp-action="Products" class="nav-link">Products</a>
+                        }
+                        @if (userService.IsCurrentUserInRole(RoleNames.SuperAdmin))
+                        {
+                            <a asp-controller="Employee" asp-action="Employees" class="nav-link">Employees</a>
+                        }
+                        @if (userService.IsCurrentUserInRole(RoleNames.SuperAdmin, RoleNames.Admin, RoleNames.Moderator, RoleNames.SMM ))
+                        {
+                            <a asp-controller="Order" asp-action="Orders" class="nav-link">Orders</a>
+                            <a asp-controller="Color" asp-action="Colors" class="nav-link">Colors</a>
+                            <a asp-controller="Size" asp-action="Sizes" class="nav-link">Sizes</a>
+                        }
                     </li><!--end nav-item-->
                 </ul><!--end nav-->
             </div><!-- end Dashboards -->

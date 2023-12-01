@@ -38,9 +38,12 @@
                                 <td>@user.LastName</td>
                                 <td>@user.Email</td>
                                 <td>
-                                    @if (user.IsAdmin)
+                                    @if (user.UserRoles.Any())
                                     {
-                                        <span class="badge badge-soft-success">Admin</span>
+                                        foreach (var userRole in user.UserRoles)
+                                        {
+                                            <span class="badge badge-soft-success">@userRole.Role.ToString()</span>
+                                        }
                                     }
                                 </td>
                                 <td class="text-end">

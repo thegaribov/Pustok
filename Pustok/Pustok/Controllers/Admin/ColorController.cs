@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Pustok.Contracts;
 using Pustok.Database;
 using System.Linq;
 
@@ -7,7 +8,7 @@ namespace Pustok.Controllers.Admin;
 
 
 [Route("admin/colors")]
-[Authorize(Roles = "admin")]
+[Authorize(Roles = RoleNames.SuperAdmin)]
 public class ColorController : Controller
 {
     private readonly PustokDbContext _pustokDbContext;

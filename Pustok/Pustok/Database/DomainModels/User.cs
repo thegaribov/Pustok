@@ -1,4 +1,6 @@
-﻿using Pustok.Database.Abstracts;
+﻿using Pustok.Contracts;
+using Pustok.Database.Abstracts;
+using System.Collections.Generic;
 
 namespace Pustok.Database.DomainModels
 {
@@ -9,6 +11,7 @@ namespace Pustok.Database.DomainModels
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public bool IsAdmin { get; set; }
+
+        public List<UserRole> UserRoles { get; set; }
     }
 }

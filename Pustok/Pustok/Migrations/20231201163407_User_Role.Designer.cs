@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pustok.Database;
@@ -11,9 +12,10 @@ using Pustok.Database;
 namespace Pustok.Migrations
 {
     [DbContext(typeof(PustokDbContext))]
-    partial class PustokDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231201163407_User_Role")]
+    partial class User_Role
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -365,6 +367,9 @@ namespace Pustok.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("text");
 
+                    b.Property<int?>("Role")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -376,7 +381,8 @@ namespace Pustok.Migrations
                             Email = "super_admin@gmail.com",
                             LastName = "Admin",
                             Name = "Admin",
-                            Password = "$2a$11$O7cPwgCVesH6L93//wKV1OwTnOchJfFQ7dWB5jn4ev2Dcmc0lZxCa"
+                            Password = "$2a$11$O7cPwgCVesH6L93//wKV1OwTnOchJfFQ7dWB5jn4ev2Dcmc0lZxCa",
+                            Role = 0
                         },
                         new
                         {
@@ -384,31 +390,7 @@ namespace Pustok.Migrations
                             Email = "moderator@gmail.com",
                             LastName = "Moderator",
                             Name = "Moderator",
-                            Password = "$2a$11$O7cPwgCVesH6L93//wKV1OwTnOchJfFQ7dWB5jn4ev2Dcmc0lZxCa"
-                        });
-                });
-
-            modelBuilder.Entity("Pustok.Database.DomainModels.UserRole", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("integer");
-
-                    b.HasKey("UserId", "Role");
-
-                    b.ToTable("UserRole");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = -1,
-                            Role = 0
-                        },
-                        new
-                        {
-                            UserId = -2,
+                            Password = "$2a$11$O7cPwgCVesH6L93//wKV1OwTnOchJfFQ7dWB5jn4ev2Dcmc0lZxCa",
                             Role = 2
                         });
                 });
@@ -552,17 +534,6 @@ namespace Pustok.Migrations
                     b.Navigation("Size");
                 });
 
-            modelBuilder.Entity("Pustok.Database.DomainModels.UserRole", b =>
-                {
-                    b.HasOne("Pustok.Database.DomainModels.User", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Pustok.Database.DomainModels.Color", b =>
                 {
                     b.Navigation("ProductColors");
@@ -578,11 +549,6 @@ namespace Pustok.Migrations
                     b.Navigation("ProductColors");
 
                     b.Navigation("ProductSizes");
-                });
-
-            modelBuilder.Entity("Pustok.Database.DomainModels.User", b =>
-                {
-                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

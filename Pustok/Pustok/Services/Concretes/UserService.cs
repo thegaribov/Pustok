@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.Services.Abstract;
@@ -30,6 +32,12 @@ public class UserService : IUserService
         }
     }
 
+
+    public bool IsCurrentUserInRole(params string[] roles)
+    {
+        return roles.Any(r => _httpContextAccessor.HttpContext.User.IsInRole(r));
+    }
+
     public UserService(
         PustokDbContext pustokDbContext, 
         IHttpContextAccessor httpContextAccessor)
@@ -43,7 +51,9 @@ public class UserService : IUserService
         var currentUserId = _httpContextAccessor.HttpContext.User
             .FindFirst(c => c.Type == "Id").Value;
 
-        return _pustokDbContext.Users.Single(u => u.Id == Convert.ToInt32(currentUserId));
+        return _pustokDbContext.Users
+            .Include(u => u.UserRoles)
+            .Single(u => u.Id == Convert.ToInt32(currentUserId));
     }
 
     public string GetFullName(User user)

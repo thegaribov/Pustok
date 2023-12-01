@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Pustok.Contracts;
 using Pustok.Database;
 using System.Linq;
 
 namespace Pustok.Controllers.Admin;
 
 [Route("admin/sizes")]
-[Authorize(Roles = "admin")]
+[Authorize(Roles = RoleNames.SuperAdmin)]
 public class SizeController : Controller
 {
     private readonly PustokDbContext _pustokDbContext;

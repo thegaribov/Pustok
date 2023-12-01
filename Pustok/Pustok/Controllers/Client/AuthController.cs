@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.ViewModels.Auth;
@@ -23,7 +24,7 @@ public class AuthController : Controller
 
     [HttpGet]
     public async Task<IActionResult> Login()
-    {   
+    {
         return View();
     }
 
@@ -31,6 +32,7 @@ public class AuthController : Controller
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         var user = _pustokDbContext.Users
+            .Include(u => u.UserRoles)
             .FirstOrDefault(u => u.Email == model.Email);
         if (user == null)
         {
@@ -51,9 +53,9 @@ public class AuthController : Controller
             new Claim("Id", user.Id.ToString())
         };
 
-        if (user.IsAdmin)
+        foreach (var userRole in user.UserRoles)
         {
-            claims.Add(new Claim(ClaimTypes.Role, "admin"));
+            claims.Add(new Claim(ClaimTypes.Role, userRole.Role.ToString()));
         }
 
         var claimsIdentity = new ClaimsIdentity(claims, "Cookies");

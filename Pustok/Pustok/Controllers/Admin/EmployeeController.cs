@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.Services.Abstract;
@@ -13,7 +14,7 @@ namespace Pustok.Controllers.Admin;
 
 
 [Route("admin/employees")]
-[Authorize(Roles = "admin")]
+[Authorize(Roles = $"{RoleNames.SuperAdmin},{RoleNames.Moderator}"  )]
 public class EmployeeController : Controller
 {
     private readonly PustokDbContext _dbContext;

@@ -129,7 +129,7 @@
                                     </a>
                                 </li>
 
-                                @if (userService.IsAuthenticateed && userService.CurrentUser.IsAdmin)
+                                @if (userService.IsAuthenticateed && userService.CurrentUser.UserRoles.Any())
                                 {
                                     <li class="minicart-wrap me-3 me-lg-0">
                                         <a asp-route="admin-products">

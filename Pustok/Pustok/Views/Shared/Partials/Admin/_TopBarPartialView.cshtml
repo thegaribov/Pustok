@@ -1,4 +1,5 @@
-﻿ <!-- Top Bar Start -->
+﻿@inject IUserService userService
+ <!-- Top Bar Start -->
 <div class="topbar">
     <!-- Navbar -->
     <nav class="navbar-custom" id="navbar-custom">
@@ -107,9 +108,11 @@
                     <div class="d-flex align-items-center">
                         <img src="~/admin/assets/images/users/user-4.jpg" alt="profile-user" class="rounded-circle me-2 thumb-sm" />
                         <div>
-                            <small class="d-none d-md-block font-11">Admin</small>
+                            <small class="d-none d-md-block font-11">
+                                @string.Join(",", userService.CurrentUser.UserRoles.Select(ur => ur.Role.ToString()))
+                            </small>
                             <span class="d-none d-md-block fw-semibold font-12">
-                                Maria Gibson <i class="mdi mdi-chevron-down"></i>
+                                @userService.GetCurrentUserFullName() <i class="mdi mdi-chevron-down"></i>
                             </span>
                         </div>
                     </div>
@@ -118,7 +121,7 @@
                     <a class="dropdown-item" href="#"><i class="ti ti-user font-16 me-1 align-text-bottom"></i> Profile</a>
                     <a class="dropdown-item" href="#"><i class="ti ti-settings font-16 me-1 align-text-bottom"></i> Settings</a>
                     <div class="dropdown-divider mb-0"></div>
-                    <a class="dropdown-item" href="#"><i class="ti ti-power font-16 me-1 align-text-bottom"></i> Logout</a>
+                    <a asp-controller="auth" asp-action="logout" class="dropdown-item"><i class="ti ti-power font-16 me-1 align-text-bottom"></i> Logout</a>
                 </div>
             </li><!--end topbar-profile-->
 

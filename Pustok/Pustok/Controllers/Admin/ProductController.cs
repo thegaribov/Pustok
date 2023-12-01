@@ -15,7 +15,7 @@ using System.Linq;
 namespace Pustok.Controllers.Admin;
 
 [Route("admin/products")]
-[Authorize(Roles = "admin")]
+[Authorize(Roles = RoleNames.SuperAdmin)]
 public class ProductController : Controller
 {
     private readonly PustokDbContext _pustokDbContext;
