@@ -5,8 +5,10 @@ using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.Services.Abstract;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Pustok.Services.Concretes;
 
@@ -69,5 +71,20 @@ public class UserService : IUserService
     public bool IsUserSeeded(User user)
     {
         return user.Id < 0;
+    }
+
+    public List<User> GetWholeStaff()
+    {
+        var staff = _pustokDbContext.Users
+            .Where(u => u.UserRoles
+                .Any(ur =>
+                    ur.Role == Role.Moderator ||
+                    ur.Role == Role.Admin ||
+                    ur.Role == Role.SuperAdmin ||
+                    ur.Role == Role.SMM))
+            .ToList();
+
+
+        return staff;
     }
 }

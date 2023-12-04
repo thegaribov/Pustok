@@ -25,6 +25,10 @@ public class PustokDbContext : DbContext
             .ToTable("Sizes");
 
         modelBuilder
+            .Entity<Notification>()
+            .ToTable("Notifications");
+
+        modelBuilder
             .Entity<ProductColor>()
             .ToTable("ProductColors")
             .HasKey(x => new { x.ProductId, x.ColorId });
@@ -147,4 +151,5 @@ public class PustokDbContext : DbContext
     public DbSet<BasketProduct> BasketProducts { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
 }

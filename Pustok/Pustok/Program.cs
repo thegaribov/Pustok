@@ -1,13 +1,7 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Pustok.Contracts;
-using Pustok.Database;
 using Pustok.Extensions;
-using Pustok.Services;
-using Pustok.Services.Abstract;
-using Pustok.Services.Concretes;
+using Pustok.Hubs;
 
 namespace Pustok;
 
@@ -31,6 +25,7 @@ public class Program
         builder.Services.AddControllerConfigs();
         builder.Services.AddAuth();
         builder.Services.AddCustomServices();
+        builder.Services.AddSignalR();
     }
 
     private static void ConfigureMiddlewarePipeline(WebApplication app)
@@ -41,5 +36,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllerRoute("default", "{controller=Home}/{action=Index}");
+
+        app.MapHub<AlertHub>("alerthub");
     }
 }

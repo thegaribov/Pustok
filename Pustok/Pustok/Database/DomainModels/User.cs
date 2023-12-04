@@ -13,5 +13,6 @@ namespace Pustok.Database.DomainModels
         public string Password { get; set; }
 
         public List<UserRole> UserRoles { get; set; }
+        public List<Notification> Notifications { get; set; }
     }
 }

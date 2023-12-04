@@ -54,8 +54,10 @@ public class OrderController : Controller
             .ToList();
 
         _pustokDbContext.Orders.Add(order);
-        
         _pustokDbContext.BasketProducts.RemoveRange(basketProducts);
+
+        var notifications = _orderService.CreateOrderNotifications(order);
+
         _pustokDbContext.SaveChanges();
 
         return RedirectToAction("Orders", "Dashboard");

@@ -1,4 +1,6 @@
 ﻿using Pustok.Database.DomainModels;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Pustok.Services.Abstract;
 
@@ -10,4 +12,5 @@ public interface IUserService
     string GetFullName(User user);
     string GetCurrentUserFullName();
     bool IsUserSeeded(User user);
+    List<User> GetWholeStaff();
 }
