@@ -22,6 +22,7 @@ public class NotificationViewComponent : ViewComponent
     {
         var notifications = _pustokDbContext.Notifications
             .Where(n => n.User == _userService.CurrentUser)
+            .OrderByDescending(n => n.CreatedAt)
             .ToList();
 
         return View(notifications);

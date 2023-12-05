@@ -4,11 +4,10 @@ using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.Services.Abstract;
+using Pustok.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Pustok.Services.Concretes;
 
@@ -16,13 +15,48 @@ public class UserService : IUserService
 {
     private readonly PustokDbContext _pustokDbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private static List<UserConnectionViewModel> _userConnection;
     private User _currentUser = null;
+
+
+    static UserService()
+    {
+        _userConnection = new List<UserConnectionViewModel>();
+    }
+
+    public UserService(
+    PustokDbContext pustokDbContext,
+    IHttpContextAccessor httpContextAccessor)
+    {
+        _pustokDbContext = pustokDbContext;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    public string GetUserConnection(int userId)
+    {
+        return _userConnection.SingleOrDefault(uc => uc.UserId == userId)?.ConnectionId;
+    }
+
+    public void AddCurrentUserConnection(string userConnection)
+    {
+        _userConnection.Add(new UserConnectionViewModel
+        {
+            UserId = CurrentUser.Id,
+            ConnectionId = userConnection
+        });
+    }
+
+    public void RemoveCurrentUserConnection()
+    {
+        _userConnection.RemoveAll(uc => uc.UserId == CurrentUser.Id);
+    }
 
     public User CurrentUser
     {
-        get { 
+        get
+        {
 
-            return _currentUser ??= GetCurrentLoggedUser(); 
+            return _currentUser ??= GetCurrentLoggedUser();
         }
     }
 
@@ -40,13 +74,7 @@ public class UserService : IUserService
         return roles.Any(r => _httpContextAccessor.HttpContext.User.IsInRole(r));
     }
 
-    public UserService(
-        PustokDbContext pustokDbContext, 
-        IHttpContextAccessor httpContextAccessor)
-    {
-        _pustokDbContext = pustokDbContext;
-        _httpContextAccessor = httpContextAccessor;
-    }
+
 
     private User GetCurrentLoggedUser()
     {

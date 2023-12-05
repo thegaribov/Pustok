@@ -13,4 +13,9 @@ public interface IUserService
     string GetCurrentUserFullName();
     bool IsUserSeeded(User user);
     List<User> GetWholeStaff();
+
+
+    string GetUserConnection(int userId);
+    void AddCurrentUserConnection(string userConnection);
+    void RemoveCurrentUserConnection();
 }
