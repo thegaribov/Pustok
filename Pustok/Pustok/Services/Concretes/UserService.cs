@@ -70,6 +70,12 @@ public class UserService : IUserService
         }
     }
 
+
+    public bool IsOnline(int userId)
+    {
+        return _userConnection.Any(uc => uc.UserId == userId && uc.ConnectionIds.Any());
+    }
+
     public User CurrentUser
     {
         get

@@ -17,4 +17,6 @@ public interface IUserService
     List<string> GetUserConnections(int userId);
     void AddCurrentUserConnection(string userConnection);
     void RemoveCurrentUserConnection(string connectionId);
+
+    bool IsOnline(int userId);
 }

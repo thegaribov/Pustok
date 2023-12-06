@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject IUserService userService;
+
+<!DOCTYPE html>
 <html lang="zxx">
 <head>
     <meta charset="UTF-8" />
@@ -32,7 +34,7 @@
     <!-- Style CSS -->
     <link rel="stylesheet" href="~/client/assets/css/style.css" />
 
-      @RenderSection("custom_styles", false)
+    @RenderSection("custom_styles", false)
 </head>
 
 <body>
@@ -77,6 +79,14 @@
     <script src="~/client/assets/js/plugins/ion.rangeSlider.min.js"></script>
     <script src="~/client/assets/js/plugins/mailchimp-ajax.js"></script>
     <script src="~/client/assets/js/plugins/jquery.counterup.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+
+    @if (userService.IsAuthenticateed)
+    {
+        <script src="~/admin/assets/js/notification.js" asp-append-version="true"></script>
+    }
+
 
     @RenderSection("custom_plugin_scripts", false)
 

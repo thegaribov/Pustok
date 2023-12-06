@@ -38,7 +38,16 @@
                                 <td>@user.Name</td>
                                 <td>@user.LastName</td>
                                 <td>@user.Email</td>
-                                <td><span class="badge badge-soft-danger">Offline</span></td>
+                                <td>
+                                    @if (userService.IsOnline(user.Id))
+                                    {
+                                        <span class="badge badge-soft-success">Online</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-soft-danger">Offline</span>
+                                    }
+                                </td>
                                 <td>
                                     @if (user.UserRoles.Any())
                                     {
@@ -67,3 +76,8 @@
         </div><!--end card-body-->
     </div><!--end card-->
 </div> <!-- end col -->
+
+@section custom_scripts{
+
+    <script src="~/admin/assets/js/users-page-hub.js" asp-append-version="true"></script>
+}
