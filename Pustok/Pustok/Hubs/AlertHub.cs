@@ -16,14 +16,16 @@ public class AlertHub : Hub
 
     public override Task OnConnectedAsync()
     {
-        _userService.AddCurrentUserConnection(Context.ConnectionId);
+        _userService
+            .AddCurrentUserConnection(Context.ConnectionId);
 
         return base.OnConnectedAsync();
     }
 
     public override Task OnDisconnectedAsync(Exception exception)
     {
-        _userService.RemoveCurrentUserConnection();
+        _userService
+            .RemoveCurrentUserConnection(Context.ConnectionId);
 
         return base.OnDisconnectedAsync(exception);
     }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
+using Pustok.Migrations;
 using Pustok.Services.Abstract;
 using Pustok.ViewModels;
 using System;
@@ -32,23 +33,41 @@ public class UserService : IUserService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public string GetUserConnection(int userId)
+    public List<string> GetUserConnections(int userId)
     {
-        return _userConnection.SingleOrDefault(uc => uc.UserId == userId)?.ConnectionId;
+        return _userConnection.SingleOrDefault(uc => uc.UserId == userId)?.ConnectionIds ?? new List<string>();
     }
 
     public void AddCurrentUserConnection(string userConnection)
     {
-        _userConnection.Add(new UserConnectionViewModel
+        var connectionIds = _userConnection
+            .SingleOrDefault(uc => uc.UserId == CurrentUser.Id)?
+            .ConnectionIds;
+
+        if (connectionIds == null)
         {
-            UserId = CurrentUser.Id,
-            ConnectionId = userConnection
-        });
+            _userConnection.Add(new UserConnectionViewModel
+            {
+                UserId = CurrentUser.Id,
+                ConnectionIds = new List<string> { userConnection }
+            });
+        }
+        else
+        {
+            connectionIds.Add(userConnection);
+        }
     }
 
-    public void RemoveCurrentUserConnection()
+    public void RemoveCurrentUserConnection(string connectionId)
     {
-        _userConnection.RemoveAll(uc => uc.UserId == CurrentUser.Id);
+        var connectionIds = _userConnection
+            .SingleOrDefault(uc => uc.UserId == CurrentUser.Id)?
+            .ConnectionIds;
+
+        if (connectionIds != null)
+        {
+            connectionIds.Remove(connectionId);
+        }
     }
 
     public User CurrentUser

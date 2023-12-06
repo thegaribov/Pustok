@@ -67,22 +67,22 @@ public class OrderController : Controller
 
         foreach (var notification in notifications)
         {
-            var connectionId = _userService
-                .GetUserConnection(notification.UserId);
+            var connectionIds = _userService
+                .GetUserConnections(notification.UserId);
 
-            if (connectionId == null)
-                continue;
-
-            var model = new NotificationViewModel
+            foreach (var connectionId in connectionIds)
             {
-                Title = notification.Title,
-                Content = notification.Content,
-                CreatedAt = notification.CreatedAt.ToString("dd/MM/yyyy HH:mm")
-            };
+                var model = new NotificationViewModel
+                {
+                    Title = notification.Title,
+                    Content = notification.Content,
+                    CreatedAt = notification.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                };
 
-            await _alertHubContext.Clients
-                .Client(connectionId)
-                .SendAsync("ReceiveAlertMessage", model);
+                await _alertHubContext.Clients
+                    .Client(connectionId)
+                    .SendAsync("ReceiveAlertMessage", model);
+            }
         }
 
         _pustokDbContext.SaveChanges();
