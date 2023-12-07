@@ -3,8 +3,11 @@
     .configureLogging(signalR.LogLevel.Information)
     .build();
 
-usersPageConnection.on("ReceiveAlertMessage", (data) => {
-    
+usersPageConnection.on("ReceiveUserStatus", (data) => {
+    $(`[users]`)
+        .find(`[data-id='${data.userId}']`)
+        .find(`[user-status]`)
+        .html(GetUserStatus(data.isOnline))
 });
 
 
@@ -24,3 +27,14 @@ usersPageConnection.onclose(async () => {
 
 // Start the connection.
 start();
+
+function GetUserStatus(isOnline) {
+    console.log(isOnline)
+
+    if (isOnline) {
+        return `<span class="badge badge-soft-success">Online</span>`
+    }
+    else {
+        return `<span class="badge badge-soft-danger">Offline</span>`
+    }
+}

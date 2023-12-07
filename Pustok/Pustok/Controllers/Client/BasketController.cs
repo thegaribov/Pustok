@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pustok.Database;
-using Pustok.Database.DomainModels;
 using Pustok.Services.Abstract;
-using Pustok.Services.Concretes;
 using Pustok.ViewModels.Product;
 using System.Linq;
 

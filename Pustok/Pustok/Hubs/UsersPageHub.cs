@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Pustok.Services.Abstract;
 using System;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Pustok.Hubs;
 
-
+[Authorize]
 public class UsersPageHub : Hub
 {
     private readonly ILogger<UsersPageHub> _logger;

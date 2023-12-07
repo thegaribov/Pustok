@@ -21,7 +21,7 @@
         </div><!--end card-header-->
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped mb-0">
+                <table users class="table table-striped mb-0">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -34,11 +34,11 @@
                     <tbody>
                         @foreach (var user in Model)
                         {
-                            <tr>
+                            <tr data-id="@user.Id" >
                                 <td>@user.Name</td>
                                 <td>@user.LastName</td>
                                 <td>@user.Email</td>
-                                <td>
+                                <td user-status >
                                     @if (userService.IsOnline(user.Id))
                                     {
                                         <span class="badge badge-soft-success">Online</span>

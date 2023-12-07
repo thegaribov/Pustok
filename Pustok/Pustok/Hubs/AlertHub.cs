@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Pustok.Services.Abstract;
 using System;
 using System.Threading.Tasks;
 
 namespace Pustok.Hubs;
 
+[Authorize]
 public class AlertHub : Hub
 {
     private readonly IUserService _userService;
@@ -21,7 +23,10 @@ public class AlertHub : Hub
         _userService
             .AddCurrentUserConnection(Context.ConnectionId);
 
-        //_usersPageHubContext.Clients.Clients()
+        _usersPageHubContext.Clients.All
+            .SendAsync(
+            "ReceiveUserStatus",
+            new { UserId = _userService.CurrentUser.Id, IsOnline = true });
 
         return base.OnConnectedAsync();
     }
@@ -30,6 +35,11 @@ public class AlertHub : Hub
     {
         _userService
             .RemoveCurrentUserConnection(Context.ConnectionId);
+
+        _usersPageHubContext.Clients.All
+            .SendAsync(
+            "ReceiveUserStatus",
+            new { UserId = _userService.CurrentUser.Id, IsOnline = false });
 
         return base.OnDisconnectedAsync(exception);
     }
