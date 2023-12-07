@@ -3,19 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pustok.Database;
 using Pustok.Services.Abstract;
+using Pustok.ViewModels;
 using Pustok.ViewModels.Product;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace Pustok.Controllers.Client;
 
 [Route("basket")]
-[Authorize]
 public class BasketController : Controller
 {
     private readonly IUserService _userService;
     private readonly PustokDbContext _pustokDbContext;
     private readonly IProductService _productService;
     private readonly IBasketService _basketService;
+
 
     public BasketController(
         IUserService userService,
@@ -37,15 +40,40 @@ public class BasketController : Controller
     [HttpGet("add-product")]
     public IActionResult AddProduct(int productId, int? sizeId, int? colorId)
     {
-        _basketService.CreateOrIncrementQuantity
-            (
-                productId,
-                sizeId ?? _productService.GetDefaultSizeId(productId),
-                colorId ?? _productService.GetDefaultColorId(productId),
-                _userService.CurrentUser
-            );
+        List<BasketProductCookieViewModel> model = null;
 
-        _pustokDbContext.SaveChanges();
+        var basketCookieValue = HttpContext.Request.Cookies["Basket"];
+        if (basketCookieValue != null)
+        {
+            model = JsonSerializer.Deserialize<List<BasketProductCookieViewModel>>(basketCookieValue);
+
+            var productCookieViewModel = model.FirstOrDefault(m => m.ProductId == productId);
+            if (productCookieViewModel != null)
+            {
+                productCookieViewModel.Quantity++;
+            }
+            else
+            {
+                model.Add(
+                    new BasketProductCookieViewModel(
+                        productId,
+                        colorId ?? _productService.GetDefaultColorId(productId),
+                        sizeId ?? _productService.GetDefaultSizeId(productId)));
+            }
+        }
+        else
+        {
+            model = new List<BasketProductCookieViewModel>
+            {
+                new BasketProductCookieViewModel(
+                    productId,
+                    colorId ?? _productService.GetDefaultColorId(productId),
+                    sizeId ?? _productService.GetDefaultSizeId(productId))
+            };
+        }
+
+        HttpContext.Response.Cookies
+            .Append("Basket", JsonSerializer.Serialize(model));
 
         return RedirectToAction("index", "home");
     }
@@ -134,8 +162,6 @@ public class BasketController : Controller
             return Json(updateResponseViewModel);
         }
     }
-
-
 
     [HttpGet("cart")]
     public IActionResult GetBasketProducts()
