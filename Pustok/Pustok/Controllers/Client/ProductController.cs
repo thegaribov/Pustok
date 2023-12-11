@@ -1,16 +1,81 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Pustok.Contracts;
 using Pustok.Database;
+using Pustok.Extensions;
+using Pustok.Services.Abstract;
 using Pustok.ViewModels.Product;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pustok.Controllers.Client;
 
 public class ProductController : Controller
 {
-    public IActionResult Index()
+    private readonly PustokDbContext _pustokDbContext;
+    private readonly IFileService _fileService;
+
+    public ProductController(
+        PustokDbContext pustokDbContext,
+        IFileService fileService)
     {
-        return View();
+        _pustokDbContext = pustokDbContext;
+        _fileService = fileService;
+    }
+
+    public async Task<IActionResult> Index(
+        [FromQuery] string searchName, 
+        [FromQuery] int? categoryId,
+        [FromQuery] int? colorId,
+        [FromQuery] decimal? priceMinRangeFilter,
+        [FromQuery] decimal? priceMaxRangeFilter)
+    {
+        var productPageViewModel = new ProductsPageViewModel();
+        productPageViewModel.SearchName = searchName;
+        productPageViewModel.CategoryId = categoryId;
+        productPageViewModel.ColorId = colorId;
+
+        productPageViewModel.Products = await _pustokDbContext.Products
+            .WhereNotNull(searchName, p => EF.Functions.ILike(p.Name, $"%{searchName}%"))
+            .WhereNotNull(categoryId, p => p.CategoryId == categoryId)
+            .WhereNotNull(colorId, p => p.ProductColors.Any(pc => pc.ColorId == colorId))
+            .WhereNotNull(priceMinRangeFilter, p => p.Price > priceMinRangeFilter.Value)
+            .WhereNotNull(priceMaxRangeFilter, p => p.Price > priceMinRangeFilter.Value)
+            .Select(p => new ProductViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                Rating = p.Rating,
+                ImageUrl = UploadDirectory.Products.GetUrl(p.ImageNameInFileSystem),
+            })
+            .ToListAsync();
+        productPageViewModel.Categories = await _pustokDbContext.Categories
+            .Select(c => new CategoryViewModel
+            {
+                Id = c.Id,
+                Name = c.Name,
+                ProductsCount = c.Products.Count,
+            })
+            .ToListAsync();
+        productPageViewModel.Colors = await _pustokDbContext.Colors
+            .Select(c => new ColorViewModel
+            {
+                Id = c.Id,
+                Name = c.Name,
+                ProductsCount = c.ProductColors.Count
+            })
+            .ToListAsync();
+        productPageViewModel.PriceMinRange = _pustokDbContext.Products
+            .OrderBy(p => p.Price)
+            .FirstOrDefault()?
+            .Price;
+        productPageViewModel.PriceMaxRange = _pustokDbContext.Products
+            .OrderByDescending(p => p.Price)
+            .FirstOrDefault()?
+            .Price;
+
+        return View(productPageViewModel);
     }
 
     public IActionResult SingleProduct(int id, [FromServices] PustokDbContext pustokDbContext)
