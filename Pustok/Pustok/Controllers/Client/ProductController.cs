@@ -31,7 +31,8 @@ public class ProductController : Controller
         [FromQuery] int? categoryId,
         [FromQuery] int? colorId,
         [FromQuery(Name = "price-range-filter")] string priceRangeFilter,
-        [FromQuery] string sortQuery)
+        [FromQuery] string sortQuery,
+        [FromQuery] int? page)
 
     {
         (decimal? priceMinRangeFilter, decimal? priceMaxRangeFilter) = GetRanges(priceRangeFilter);
@@ -48,6 +49,7 @@ public class ProductController : Controller
         productPageViewModel.ColorId = colorId;
         productPageViewModel.PriceMinRangeFilter = priceMinRangeFilter;
         productPageViewModel.PriceMaxRangeFilter = priceMaxRangeFilter;
+        productPageViewModel.Page = page ?? 1;
 
         return View(productPageViewModel);
 
@@ -69,7 +71,7 @@ public class ProductController : Controller
                 .WhereNotNull(priceMaxRangeFilter, p => p.Price <= priceMaxRangeFilter.Value);
 
             productsQuery = ImplementProductSorting(productsQuery, sortQuery);
-
+            productsQuery = ImplementPaging(productsQuery, page);
 
             return await productsQuery
             .Select(p => new ProductViewModel
@@ -119,6 +121,16 @@ public class ProductController : Controller
                     throw new Exception("Sort query doesn't found");
             }
 
+        }
+
+        IQueryable<Product> ImplementPaging(IQueryable<Product> productQuery, int? page)
+        {
+            const int pageSize = 6;
+            int skipCount = ((page ?? 1) - 1) * pageSize;
+
+            return productQuery
+                .Skip(skipCount)
+                .Take(pageSize);
         }
 
         async Task<List<CategoryViewModel>> GetCategoriesAsync()

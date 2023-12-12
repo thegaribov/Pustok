@@ -40,7 +40,7 @@
                             <div class="widgets-item pt-0">
                                 <h2 class="widgets-title mb-4">Categories</h2>
                                 <select asp-for="CategoryId" form="products-filter">
-                                    <option value="" >-- SELECT --</option>
+                                    <option value="">-- SELECT --</option>
                                     @foreach (var category in Model.Categories)
                                     {
                                         <option value="@category.Id">@category.Name (@category.ProductsCount)</option>
@@ -62,15 +62,15 @@
                             <div class="widgets-item widgets-filter">
                                 <h2 class="widgets-title mb-4">Price Filter</h2>
                                 <div class="price-filter">
-                                    <input type="text" class="pronia-range-slider" name="price-range-filter" 
-                                        form="products-filter" 
-                                        value=""
-                                        data-type="double"
-                                        data-min="@Model.PriceMinRange"
-                                        data-from="@Model.PriceMinRangeFilter"
-                                        data-to="@Model.PriceMaxRangeFilter"
-                                        data-max="@Model.PriceMaxRange"
-                                        data-grid="false" />
+                                    <input type="text" class="pronia-range-slider" name="price-range-filter"
+                                           form="products-filter"
+                                           value=""
+                                           data-type="double"
+                                           data-min="@Model.PriceMinRange"
+                                           data-from="@Model.PriceMinRangeFilter"
+                                           data-to="@Model.PriceMaxRangeFilter"
+                                           data-max="@Model.PriceMaxRange"
+                                           data-grid="false" />
                                 </div>
                             </div>
                         </div>
@@ -185,17 +185,15 @@
                     <div class="pagination-area">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination justify-content-center">
+                                <li class="page-item">
+                                    <button form="products-filter" type="submit" class="page-link" aria-label="Next">&laquo;</button>
+                                </li>
                                 <li class="page-item active">
-                                    <a class="page-link" href="#">1</a>
+                                    <a class="page-link" href="#">@Model.Page</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="#">2</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">3</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Next">&raquo;</a>
+                                    <button class="page-link" form="products-filter" type="submit" aria-label="Next">&raquo;</button>
+                                    <input type="hidden" name="page" form="products-filter" value="@(Model.Page+1)" />
                                 </li>
                             </ul>
                         </nav>

@@ -10,6 +10,7 @@ public class ProductsPageViewModel
     public decimal? PriceMinRange { get; set; }
     public decimal? PriceMaxRange { get; set; }
     public string SortQuery { get; set; }
+    public int? Page { get; set; }
 
     public string SearchName { get; set; }
     public int? CategoryId { get; set; }
