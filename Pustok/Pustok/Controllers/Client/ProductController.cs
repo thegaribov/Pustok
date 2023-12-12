@@ -2,9 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Pustok.Contracts;
 using Pustok.Database;
+using Pustok.Database.DomainModels;
 using Pustok.Extensions;
 using Pustok.Services.Abstract;
 using Pustok.ViewModels.Product;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,23 +27,51 @@ public class ProductController : Controller
     }
 
     public async Task<IActionResult> Index(
-        [FromQuery] string searchName, 
+        [FromQuery] string searchName,
         [FromQuery] int? categoryId,
         [FromQuery] int? colorId,
-        [FromQuery] decimal? priceMinRangeFilter,
-        [FromQuery] decimal? priceMaxRangeFilter)
+        [FromQuery(Name = "price-range-filter")] string priceRangeFilter,
+        [FromQuery] string sortQuery)
+
     {
+        (decimal? priceMinRangeFilter, decimal? priceMaxRangeFilter) = GetRanges(priceRangeFilter);
+
         var productPageViewModel = new ProductsPageViewModel();
+        productPageViewModel.Products = await GetProductsAsync();
+        productPageViewModel.Categories = await GetCategoriesAsync();
+        productPageViewModel.Colors = await GetColorsAsync();
+        productPageViewModel.PriceMinRange = GetPriceMinRange();
+        productPageViewModel.PriceMaxRange = GetPriceMaxRange();
+
         productPageViewModel.SearchName = searchName;
         productPageViewModel.CategoryId = categoryId;
         productPageViewModel.ColorId = colorId;
+        productPageViewModel.PriceMinRangeFilter = priceMinRangeFilter;
+        productPageViewModel.PriceMaxRangeFilter = priceMaxRangeFilter;
 
-        productPageViewModel.Products = await _pustokDbContext.Products
-            .WhereNotNull(searchName, p => EF.Functions.ILike(p.Name, $"%{searchName}%"))
-            .WhereNotNull(categoryId, p => p.CategoryId == categoryId)
-            .WhereNotNull(colorId, p => p.ProductColors.Any(pc => pc.ColorId == colorId))
-            .WhereNotNull(priceMinRangeFilter, p => p.Price > priceMinRangeFilter.Value)
-            .WhereNotNull(priceMaxRangeFilter, p => p.Price > priceMinRangeFilter.Value)
+        return View(productPageViewModel);
+
+
+
+
+        // 1. with out keyword (Try pattern)
+        // 2. Custom class, with two props
+        // 3. Tuple 
+        // 4. dynamic
+
+        async Task<List<ProductViewModel>> GetProductsAsync()
+        {
+            var productsQuery = _pustokDbContext.Products
+                .WhereNotNull(searchName, p => EF.Functions.ILike(p.Name, $"%{searchName}%"))
+                .WhereNotNull(categoryId, p => p.CategoryId == categoryId)
+                .WhereNotNull(colorId, p => p.ProductColors.Any(pc => pc.ColorId == colorId))
+                .WhereNotNull(priceMinRangeFilter, p => p.Price >= priceMinRangeFilter.Value)
+                .WhereNotNull(priceMaxRangeFilter, p => p.Price <= priceMaxRangeFilter.Value);
+
+            productsQuery = ImplementProductSorting(productsQuery, sortQuery);
+
+
+            return await productsQuery
             .Select(p => new ProductViewModel
             {
                 Id = p.Id,
@@ -50,7 +81,49 @@ public class ProductController : Controller
                 ImageUrl = UploadDirectory.Products.GetUrl(p.ImageNameInFileSystem),
             })
             .ToListAsync();
-        productPageViewModel.Categories = await _pustokDbContext.Categories
+        }
+
+        (decimal? priceMinRangeFilter, decimal? priceMaxRangeFilter) GetRanges(string priceRangeFilter)
+        {
+            if (priceRangeFilter == null)
+            {
+                return (null, null);
+            }
+
+            var ranges = priceRangeFilter.Split(";");
+
+            decimal? priceMinRangeFilter = priceRangeFilter != null ? decimal.Parse(ranges[0]) : null;
+            decimal? priceMaxRangeFilter = priceRangeFilter != null ? decimal.Parse(ranges[1]) : null;
+
+            return (priceMinRangeFilter, priceMaxRangeFilter);
+        }
+
+        IOrderedQueryable<Product> ImplementProductSorting(IQueryable<Product> productQuery, string sortQuery)
+        {
+            if (sortQuery == null)
+            {
+                return productQuery.OrderByDescending(p => p.Id);
+            }
+
+            switch (sortQuery)
+            {
+                case "price_desc":
+                    return productQuery.OrderByDescending(p => p.Price);
+                case "price_asc":
+                    return productQuery.OrderBy(p => p.Price);
+                case "rate_desc":
+                    return productQuery.OrderByDescending(p => p.Rating);
+                case "rate_asc":
+                    return productQuery.OrderBy(p => p.Rating);
+                default:
+                    throw new Exception("Sort query doesn't found");
+            }
+
+        }
+
+        async Task<List<CategoryViewModel>> GetCategoriesAsync()
+        {
+            return await _pustokDbContext.Categories
             .Select(c => new CategoryViewModel
             {
                 Id = c.Id,
@@ -58,7 +131,11 @@ public class ProductController : Controller
                 ProductsCount = c.Products.Count,
             })
             .ToListAsync();
-        productPageViewModel.Colors = await _pustokDbContext.Colors
+        }
+
+        async Task<List<ColorViewModel>> GetColorsAsync()
+        {
+            return await _pustokDbContext.Colors
             .Select(c => new ColorViewModel
             {
                 Id = c.Id,
@@ -66,16 +143,23 @@ public class ProductController : Controller
                 ProductsCount = c.ProductColors.Count
             })
             .ToListAsync();
-        productPageViewModel.PriceMinRange = _pustokDbContext.Products
+        }
+
+        decimal? GetPriceMinRange()
+        {
+            return _pustokDbContext.Products
             .OrderBy(p => p.Price)
             .FirstOrDefault()?
             .Price;
-        productPageViewModel.PriceMaxRange = _pustokDbContext.Products
+        }
+
+        decimal? GetPriceMaxRange()
+        {
+            return _pustokDbContext.Products
             .OrderByDescending(p => p.Price)
             .FirstOrDefault()?
             .Price;
-
-        return View(productPageViewModel);
+        }
     }
 
     public IActionResult SingleProduct(int id, [FromServices] PustokDbContext pustokDbContext)

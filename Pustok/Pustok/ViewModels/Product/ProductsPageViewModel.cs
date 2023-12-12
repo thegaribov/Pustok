@@ -9,6 +9,7 @@ public class ProductsPageViewModel
     public List<ProductViewModel> Products { get; set; }
     public decimal? PriceMinRange { get; set; }
     public decimal? PriceMaxRange { get; set; }
+    public string SortQuery { get; set; }
 
     public string SearchName { get; set; }
     public int? CategoryId { get; set; }

@@ -62,14 +62,13 @@
                             <div class="widgets-item widgets-filter">
                                 <h2 class="widgets-title mb-4">Price Filter</h2>
                                 <div class="price-filter">
-                                    <input type="text" class="pronia-range-slider" 
-                                        name="price-range-filter" 
+                                    <input type="text" class="pronia-range-slider" name="price-range-filter" 
                                         form="products-filter" 
                                         value=""
                                         data-type="double"
                                         data-min="@Model.PriceMinRange"
-                                        data-from="@Model.PriceMinRange"
-                                        data-to="@Model.PriceMaxRange"
+                                        data-from="@Model.PriceMinRangeFilter"
+                                        data-to="@Model.PriceMaxRangeFilter"
                                         data-max="@Model.PriceMaxRange"
                                         data-grid="false" />
                                 </div>
@@ -108,13 +107,12 @@
                                 </ul>
                             </li>
                             <li class="short">
-                                <select class="nice-select">
-                                    <option value="1">Sort by Default</option>
-                                    <option value="2">Sort by Popularity</option>
-                                    <option value="3">Sort by Rated</option>
-                                    <option value="4">Sort by Latest</option>
-                                    <option value="5">Sort by High Price</option>
-                                    <option value="6">Sort by Low Price</option>
+                                <select asp-for="SortQuery" class="nice-select" form="products-filter">
+                                    <option value="">Sort by Latest</option>
+                                    <option value="price_desc">Sort by High Price</option>
+                                    <option value="price_asc">Sort by Low Price</option>
+                                    <option value="rate_asc">Sort by Rated (ascending)</option>
+                                    <option value="rate_desc">Sort by Rated (descending)</option>
                                 </select>
                             </li>
                         </ul>
