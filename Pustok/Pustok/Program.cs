@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pustok.Extensions;
 using Pustok.Hubs;
@@ -23,8 +24,9 @@ public class Program
     private static void ConfigureServices(WebApplicationBuilder builder)
     {
         builder.Services.AddControllerConfigs();
+        builder.Configuration.AddEnvironmentVariables();
         builder.Services.AddAuth();
-        builder.Services.AddCustomServices();
+        builder.Services.AddCustomServices(builder.Configuration);
         builder.Services.AddSignalR();
     }
 
