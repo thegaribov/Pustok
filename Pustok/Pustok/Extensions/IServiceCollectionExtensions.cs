@@ -5,6 +5,7 @@ using Pustok.Database;
 using Pustok.Services.Abstract;
 using Pustok.Services.Concretes;
 using Pustok.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace Pustok.Extensions;
 
@@ -17,7 +18,7 @@ public static class IServiceCollectionExtensions
             .AddRazorRuntimeCompilation();
     }
 
-    public static void AddCustomServices(this IServiceCollection serviceCollection)
+    public static void AddCustomServices(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
         serviceCollection
            .AddHttpContextAccessor()
@@ -29,7 +30,8 @@ public static class IServiceCollectionExtensions
            .AddScoped<IOrderService, OrderService>()
            .AddDbContext<PustokDbContext>(o =>
            {
-               o.UseNpgsql(DatabaseConstants.CONNECTION_STRING);
+               var connectionString = configuration.GetConnectionString("Pustok");
+               o.UseNpgsql(connectionString);
            });
     }
 
