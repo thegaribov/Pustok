@@ -31,7 +31,7 @@
                 <div class="col-xl-3 col-lg-4 order-2 order-lg-1 pt-5 pt-lg-0">
                     <div class="sidebar-area">
                         <div class="widgets-searchbox">
-                            <input asp-for="SearchName" class="input-field" placeholder="Search" form="products-filter" />
+                            <input asp-for="Search" class="input-field" placeholder="Search" form="products-filter" />
                             <button class="widgets-searchbox-btn" type="submit" form="products-filter">
                                 <i class="fa fa-search"></i>
                             </button>
@@ -81,7 +81,7 @@
                     <div class="product-topbar">
                         <ul>
                             <li class="page-count">
-                                <span>@Model.Products.Count</span> Product Found of <span>@Model.Products.Count</span>
+                                <span>@Model.Products.Count</span> Product Found of <span>@Model.Pagination.TotalRecords</span>
                             </li>
                             <li class="product-view-wrap">
                                 <ul class="nav" role="tablist">
@@ -107,7 +107,7 @@
                                 </ul>
                             </li>
                             <li class="short">
-                                <select asp-for="SortQuery" class="nice-select" form="products-filter">
+                                <select asp-for="Sort" class="nice-select" form="products-filter">
                                     <option value="">Sort by Latest</option>
                                     <option value="price_desc">Sort by High Price</option>
                                     <option value="price_asc">Sort by Low Price</option>
@@ -184,16 +184,27 @@
 
                     <div class="pagination-area">
                         <nav aria-label="Page navigation example">
+                            <select asp-for=PageSize form="products-filter" onchange="this.form.submit()">
+                                <option selected">9</option>
+                                <option>21</option>
+                                <option>15</option>
+                                <option>21</option>
+                            </select>
                             <ul class="pagination justify-content-center">
                                 <li class="page-item">
-                                    <button form="products-filter" type="submit" class="page-link" aria-label="Next">&laquo;</button>
+                                    <button name="page" type="submit" value="1" class="page-link" form="products-filter" aria-label="Next">First Page</button>
+                                </li>
+                                <li class="page-item">
+                                    <button name="page" type="submit" value="@Model.Pagination.PreviousPage" form="products-filter" class="page-link" aria-label="Next">&laquo;</button>
                                 </li>
                                 <li class="page-item active">
                                     <a class="page-link" href="#">@Model.Page</a>
                                 </li>
                                 <li class="page-item">
-                                    <button class="page-link" form="products-filter" type="submit" aria-label="Next">&raquo;</button>
-                                    <input type="hidden" name="page" form="products-filter" value="@(Model.Page+1)" />
+                                    <button name="page" type="submit" value="@Model.Pagination.NextPage" class="page-link" form="products-filter" aria-label="Next">&raquo;</button>
+                                </li>
+                                <li class="page-item">
+                                    <button name="page" type="submit" value="@Model.Pagination.LastPage" class="page-link" form="products-filter" aria-label="Next">Last Page</button>
                                 </li>
                             </ul>
                         </nav>

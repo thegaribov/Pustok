@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.Extensions;
+using Pustok.Helpers.Paging;
 using Pustok.Services.Abstract;
 using Pustok.ViewModels.Product;
 using System;
@@ -17,63 +19,71 @@ public class ProductController : Controller
 {
     private readonly PustokDbContext _pustokDbContext;
     private readonly IFileService _fileService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public ProductController(
         PustokDbContext pustokDbContext,
-        IFileService fileService)
+        IFileService fileService,
+        IHttpContextAccessor httpContextAccessor)
     {
         _pustokDbContext = pustokDbContext;
         _fileService = fileService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<IActionResult> Index(
-        [FromQuery] string searchName,
+        [FromQuery] string search,
         [FromQuery] int? categoryId,
         [FromQuery] int? colorId,
         [FromQuery(Name = "price-range-filter")] string priceRangeFilter,
-        [FromQuery] string sortQuery,
-        [FromQuery] int? page)
+        [FromQuery] string sort,
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize)
 
     {
         (decimal? priceMinRangeFilter, decimal? priceMaxRangeFilter) = GetRanges(priceRangeFilter);
 
         var productPageViewModel = new ProductsPageViewModel();
-        productPageViewModel.Products = await GetProductsAsync();
+
+        (var products, var paginator) = await GetProductsAsync();
+
+        productPageViewModel.Products = products;
+        productPageViewModel.Pagination = paginator;
         productPageViewModel.Categories = await GetCategoriesAsync();
         productPageViewModel.Colors = await GetColorsAsync();
         productPageViewModel.PriceMinRange = GetPriceMinRange();
         productPageViewModel.PriceMaxRange = GetPriceMaxRange();
 
-        productPageViewModel.SearchName = searchName;
         productPageViewModel.CategoryId = categoryId;
         productPageViewModel.ColorId = colorId;
         productPageViewModel.PriceMinRangeFilter = priceMinRangeFilter;
         productPageViewModel.PriceMaxRangeFilter = priceMaxRangeFilter;
+
         productPageViewModel.Page = page ?? 1;
+        productPageViewModel.Search = search;
+        productPageViewModel.PageSize = pageSize;
+        productPageViewModel.Sort = sort;
 
         return View(productPageViewModel);
-
-
-
 
         // 1. with out keyword (Try pattern)
         // 2. Custom class, with two props
         // 3. Tuple 
         // 4. dynamic
 
-        async Task<List<ProductViewModel>> GetProductsAsync()
+        async Task<(List<ProductViewModel> products, Paginator<Product> paginator)> GetProductsAsync()
         {
             var productsQuery = _pustokDbContext.Products
-                .WhereNotNull(searchName, p => EF.Functions.ILike(p.Name, $"%{searchName}%"))
+                .WhereNotNull(search, p => EF.Functions.ILike(p.Name, $"%{search}%"))
                 .WhereNotNull(categoryId, p => p.CategoryId == categoryId)
                 .WhereNotNull(colorId, p => p.ProductColors.Any(pc => pc.ColorId == colorId))
                 .WhereNotNull(priceMinRangeFilter, p => p.Price >= priceMinRangeFilter.Value)
                 .WhereNotNull(priceMaxRangeFilter, p => p.Price <= priceMaxRangeFilter.Value);
 
-            productsQuery = ImplementProductSorting(productsQuery, sortQuery);
-            productsQuery = ImplementPaging(productsQuery, page);
-
-            return await productsQuery
+            productsQuery = ImplementProductSorting(productsQuery, sort);
+            //productsQuery = ImplementPaging(productsQuery, page);
+            var paginator = new Paginator<Product>(productsQuery, page, pageSize ?? 9);
+            var products = await paginator.QuerySet
             .Select(p => new ProductViewModel
             {
                 Id = p.Id,
@@ -83,6 +93,8 @@ public class ProductController : Controller
                 ImageUrl = UploadDirectory.Products.GetUrl(p.ImageNameInFileSystem),
             })
             .ToListAsync();
+
+            return (products, paginator);
         }
 
         (decimal? priceMinRangeFilter, decimal? priceMaxRangeFilter) GetRanges(string priceRangeFilter)
