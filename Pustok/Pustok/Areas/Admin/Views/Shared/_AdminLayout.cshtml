@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- <meta charset="utf-8" />
+    <title> | Hyper - Responsive Bootstrap 5 Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    App favicon
+    <link rel="shortcut icon" href="~/admin/assets/images/favicon.ico"> -->
+
+    <meta charset="utf-8" />
+    <title>Metrica - Admin & Dashboard Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/admin/assets/images/favicon.ico">
+
+    @RenderSection("custom_plugings", false)
+
+    <!-- App css -->
+    <link href="~/admin/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/admin/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/admin/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+
+    @RenderSection("custom_styles", false)
+</head>
+
+<body id="body">
+    <partial name="Partials/_LeftBarPartialView" />
+
+    <partial name="Partials/_TopBarPartialView" />
+
+    <div class="page-wrapper">
+        <!-- Page Content-->
+        <div class="page-content-tab">
+            <div class="container-fluid">
+                <!-- Page-Title -->
+                <div class="row">
+
+                    @RenderBody();
+
+                </div>
+                <!-- end page title end breadcrumb -->
+            </div><!-- container -->
+            <!--Start Footer-->
+            <!-- Footer Start -->
+            <footer class="footer text-center text-sm-start">
+                &copy; <script>
+                           document.write(new Date().getFullYear())
+                </script> Metrica <span class="text-muted d-none d-sm-inline-block float-end">
+                    Crafted with <i class="mdi mdi-heart text-danger"></i> by Mannatthemes
+                </span>
+            </footer>
+            <!-- end Footer -->
+            <!--end footer-->
+        </div>
+        <!-- end page content -->
+    </div>
+
+    <!-- Javascript  -->
+    @RenderSection("custom_plugin_scripts", false)
+
+    <!-- App js -->
+    <script src="~/admin/assets/js/app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="~/admin/assets/js/notification.js" asp-append-version="true" ></script>
+
+    @RenderSection("custom_scripts", false)
+</body>
+<!--end body-->
+</html>
