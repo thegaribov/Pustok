@@ -22,6 +22,7 @@ public static class IServiceCollectionExtensions
     {
         serviceCollection
            .AddHttpContextAccessor()
+           .AddHttpClient()
            .AddScoped<IEmployeeService, EmployeeServiceImp>()
            .AddScoped<IUserService, UserService>()
            .AddSingleton<IFileService, FileService>()
