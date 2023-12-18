@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Pustok.Areas.Client.ViewModels.Auth;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
-using Pustok.ViewModels.Auth;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;

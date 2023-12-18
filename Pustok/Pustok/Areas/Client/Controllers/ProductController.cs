@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Pustok.Areas.Client.ViewModels.Product;
 using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.Extensions;
 using Pustok.Helpers.Paging;
 using Pustok.Services.Abstract;
-using Pustok.ViewModels.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Pustok.ViewModels.Product;
+using Pustok.Areas.Client.ViewModels.Product;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pustok.Areas.Admin.ViewModels.Product;

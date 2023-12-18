@@ -1,4 +1,4 @@
-﻿namespace Pustok.ViewModels.Product
+﻿namespace Pustok.Areas.Client.ViewModels.Product
 {
     public class BasketQuantityUpdateResponseViewModel
     {

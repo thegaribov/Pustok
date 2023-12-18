@@ -5,7 +5,7 @@ using Pustok.Services.Abstract;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pustok.ViewComponents
+namespace Pustok.Areas.Client.ViewComponents
 {
     public class ShoppingCartViewComponent : ViewComponent
     {
@@ -13,7 +13,7 @@ namespace Pustok.ViewComponents
         private readonly IUserService _userService;
 
         public ShoppingCartViewComponent(
-            PustokDbContext pustokDbContext, 
+            PustokDbContext pustokDbContext,
             IUserService userService)
         {
             _pustokDbContext = pustokDbContext;

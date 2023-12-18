@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Pustok.Areas.Admin.ViewModels.Notification;
 using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.Hubs;
 using Pustok.Services.Abstract;
-using Pustok.ViewModels;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,17 +21,20 @@ public class OrderController : Controller
     private readonly IUserService _userService;
     private readonly IOrderService _orderService;
     private readonly IHubContext<AlertHub> _alertHubContext;
+    private readonly INotificationService _notificationService;
 
     public OrderController(
         PustokDbContext pustokDbContext,
         IUserService userService,
         IOrderService orderService,
-        IHubContext<AlertHub> alertHubContext)
+        IHubContext<AlertHub> alertHubContext,
+        INotificationService notificationService)
     {
         _pustokDbContext = pustokDbContext;
         _userService = userService;
         _orderService = orderService;
         _alertHubContext = alertHubContext;
+        _notificationService = notificationService;
     }
 
     [HttpGet("execute")]
@@ -65,27 +66,8 @@ public class OrderController : Controller
         _pustokDbContext.Orders.Add(order);
         _pustokDbContext.BasketProducts.RemoveRange(basketProducts);
 
-        var notifications = _orderService.CreateOrderNotifications(order);
-
-        foreach (var notification in notifications)
-        {
-            var connectionIds = _userService
-                .GetUserConnections(notification.UserId);
-
-            foreach (var connectionId in connectionIds)
-            {
-                var model = new NotificationViewModel
-                {
-                    Title = notification.Title,
-                    Content = notification.Content,
-                    CreatedAt = notification.CreatedAt.ToString("dd/MM/yyyy HH:mm")
-                };
-
-                await _alertHubContext.Clients
-                    .Client(connectionId)
-                    .SendAsync("ReceiveAlertMessage", model);
-            }
-        }
+        var notifications = _notificationService.CreateNotificationsForOrderCreation(order);
+        await _notificationService.SendNotificationsAsync(notifications);
 
         _pustokDbContext.SaveChanges();
 

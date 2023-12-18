@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Pustok.ViewModels.Auth
+namespace Pustok.Areas.Client.ViewModels.Auth
 {
     public class RegisterViewModel
     {

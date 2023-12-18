@@ -50,6 +50,7 @@
             </div>
         </div>
     </div>
+
     <div class="header-middle py-30">
         <div class="container">
             <div class="row align-items-center">
@@ -129,13 +130,18 @@
                                     </a>
                                 </li>
 
-                                @if (userService.IsAuthenticateed && userService.CurrentUser.UserRoles.Any())
+                                @if (userService.IsAuthenticateed)
                                 {
-                                    <li class="minicart-wrap me-3 me-lg-0">
-                                        <a asp-route="admin-products">
-                                            Admin panel
-                                        </a>
-                                    </li>
+                                    @await Component.InvokeAsync("ClientNotification")
+
+                                    @if (userService.CurrentUser.UserRoles.Any())
+                                    {
+                                        <li class="minicart-wrap me-3 me-lg-0">
+                                            <a asp-route="admin-products">
+                                                Admin panel
+                                            </a>
+                                        </li>
+                                    }
                                 }
                             </ul>
                         </div>

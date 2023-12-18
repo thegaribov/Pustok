@@ -1,4 +1,4 @@
-﻿using Pustok.ViewModels.Product;
+﻿using Pustok.Areas.Client.ViewModels.Product;
 
 namespace Pustok.Areas.Admin.ViewModels.Product;
 

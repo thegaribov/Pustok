@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Pustok.Areas.Admin.ViewModels.Notification;
 using Pustok.Contracts;
 using Pustok.Database;
+using Pustok.Hubs;
+using Pustok.Services.Abstract;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pustok.Areas.Admin.Controllers;
 
@@ -13,10 +18,20 @@ namespace Pustok.Areas.Admin.Controllers;
 public class OrderController : Controller
 {
     private readonly PustokDbContext _pustokDbContext;
+    private readonly INotificationService _notificationService;
+    private readonly IUserService _userService;
+    private readonly IHubContext<AlertHub> _alertHubContext;
 
-    public OrderController(PustokDbContext pustokDbContext)
+    public OrderController(
+        PustokDbContext pustokDbContext,
+        INotificationService notificationService,
+        IUserService userService,
+        IHubContext<AlertHub> alertHubContext)
     {
         _pustokDbContext = pustokDbContext;
+        _notificationService = notificationService;
+        _userService = userService;
+        _alertHubContext = alertHubContext;
     }
 
     #region Orders
@@ -25,6 +40,8 @@ public class OrderController : Controller
     public IActionResult Index()
     {
         var orders = _pustokDbContext.Orders
+            .Include(o => o.User)
+            .OrderByDescending(o => o.CreatedAt)
             .ToList();
 
         return View(orders);
@@ -51,7 +68,7 @@ public class OrderController : Controller
     }
 
     [HttpPost("{id}/edit")]
-    public IActionResult Edit([FromRoute] int id, [FromForm] OrderStatus status)
+    public async Task<IActionResult> Edit([FromRoute] int id, [FromForm] OrderStatus status)
     {
         var order = _pustokDbContext.Orders
            .Include(o => o.User)
@@ -62,8 +79,11 @@ public class OrderController : Controller
 
         order.Status = status;
 
-        _pustokDbContext.SaveChanges();
+        var notification = _notificationService.CreateNotificationForOrderUpdate(order);
+        await _notificationService.SendNotificationAsync(notification);
+        
 
+        _pustokDbContext.SaveChanges();
 
         return RedirectToAction("Index");
     }

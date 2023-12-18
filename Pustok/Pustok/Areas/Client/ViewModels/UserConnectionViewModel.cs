@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Pustok.ViewModels;
+namespace Pustok.Areas.Client.ViewModels;
 
 public class UserConnectionViewModel
 {

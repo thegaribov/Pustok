@@ -3,7 +3,7 @@ using Pustok.Database.DomainModels;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Pustok.ViewModels.Product;
+namespace Pustok.Areas.Client.ViewModels.Product;
 
 public abstract class BaseProductViewModel
 {

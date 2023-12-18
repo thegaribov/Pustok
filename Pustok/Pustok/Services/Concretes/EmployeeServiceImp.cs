@@ -3,7 +3,7 @@ using Pustok.Services.Abstract;
 using System;
 using System.Linq;
 
-namespace Pustok.Services;
+namespace Pustok.Services.Concretes;
 
 public class EmployeeServiceImp : IEmployeeService
 {

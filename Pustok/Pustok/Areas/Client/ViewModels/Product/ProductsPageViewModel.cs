@@ -1,7 +1,7 @@
 ﻿using Pustok.Helpers.Paging;
 using System.Collections.Generic;
 
-namespace Pustok.ViewModels.Product;
+namespace Pustok.Areas.Client.ViewModels.Product;
 
 public class ProductsPageViewModel : QueryParams
 {

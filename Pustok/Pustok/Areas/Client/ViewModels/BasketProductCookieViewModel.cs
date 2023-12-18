@@ -1,6 +1,6 @@
 ﻿using Pustok.Database.DomainModels;
 
-namespace Pustok.ViewModels;
+namespace Pustok.Areas.Client.ViewModels;
 
 public class BasketProductCookieViewModel
 {

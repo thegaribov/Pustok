@@ -1,5 +1,5 @@
-﻿using Pustok.Database.DomainModels;
-using Pustok.ViewModels.Product;
+﻿using Pustok.Areas.Client.ViewModels.Product;
+using Pustok.Database.DomainModels;
 using System.Collections.Generic;
 
 namespace Pustok.Areas.Admin.ViewModels.Product;

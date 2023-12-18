@@ -1275,7 +1275,7 @@
     <None Include="wwwroot\admin\assets\js\app.js" />
     <None Include="wwwroot\admin\assets\js\app.min.js" />
     <None Include="wwwroot\admin\assets\js\app.min.js.map" />
-    <None Include="wwwroot\admin\assets\js\notification.js" />
+    <None Include="wwwroot\shared\js\notification.js" />
     <None Include="wwwroot\admin\assets\js\users-page-hub.js" />
     <None Include="wwwroot\admin\assets\pages\analytics-customers.init.js" />
     <None Include="wwwroot\admin\assets\pages\analytics-index.init.js" />

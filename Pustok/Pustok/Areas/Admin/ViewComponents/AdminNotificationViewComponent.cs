@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Pustok.Areas.Admin.ViewComponents;
 
-public class NotificationViewComponent : ViewComponent
+public class AdminNotificationViewComponent : ViewComponent
 {
     private readonly PustokDbContext _pustokDbContext;
     private readonly IUserService _userService;
 
-    public NotificationViewComponent(PustokDbContext pustokDbContext, IUserService userService)
+    public AdminNotificationViewComponent(PustokDbContext pustokDbContext, IUserService userService)
     {
         _pustokDbContext = pustokDbContext;
         _userService = userService;

@@ -4,7 +4,6 @@ using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Services.Abstract;
 using Pustok.Services.Concretes;
-using Pustok.Services;
 using Microsoft.Extensions.Configuration;
 
 namespace Pustok.Extensions;
@@ -29,6 +28,7 @@ public static class IServiceCollectionExtensions
            .AddScoped<IProductService, ProductService>()
            .AddScoped<IBasketService, BasketService>()
            .AddScoped<IOrderService, OrderService>()
+           .AddScoped<INotificationService, NotificationService>()
            .AddDbContext<PustokDbContext>(o =>
            {
                var connectionString = configuration.GetConnectionString("Pustok");

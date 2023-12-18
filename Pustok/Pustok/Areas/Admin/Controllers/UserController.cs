@@ -5,8 +5,6 @@ using Pustok.Areas.Admin.ViewModels.User;
 using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
-using Pustok.Migrations;
-using Pustok.ViewModels.Product;
 using System.Linq;
 
 namespace Pustok.Areas.Admin.Controllers;
@@ -33,7 +31,7 @@ public class UserController : Controller
             .OrderBy(u => u.Name)
             .ToList();
 
-        return View( users);
+        return View(users);
     }
 
     #endregion

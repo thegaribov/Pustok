@@ -40,32 +40,4 @@ public class OrderService : IOrderService
     {
         return _pustokDbContext.Orders.Any(o => o.TrackingCode == trackingCode);
     }
-
-    public List<Notification> CreateOrderNotifications(Order order)
-    {
-        var staff = _userService.GetWholeStaff();
-        List<Notification> notifications = new List<Notification>();
-
-
-        foreach (var user in staff)
-        {
-            var notification = new Notification
-            {
-                Title = NotificationTemplate.Order.Created.TITLE,
-                Content = NotificationTemplate.Order.Created.CONTENT
-                    .Replace(NotificationTemplateKeyword.TRACKING_CODE, order.TrackingCode)
-                    .Replace(NotificationTemplateKeyword.USER_FULL_NAME, _userService.GetFullName(order.User)),
-
-                User = user,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            notifications.Add(notification);
-
-            _pustokDbContext.Notifications.Add(notification);
-        }
-
-
-        return notifications;
-    }
 }

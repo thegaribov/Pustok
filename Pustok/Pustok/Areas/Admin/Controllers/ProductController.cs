@@ -8,9 +8,7 @@ using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.DomainModels;
 using Pustok.Services.Abstract;
-using Pustok.ViewModels.Product;
 using System;
-using System.IO;
 using System.Linq;
 
 namespace Pustok.Areas.Admin.Controllers;
