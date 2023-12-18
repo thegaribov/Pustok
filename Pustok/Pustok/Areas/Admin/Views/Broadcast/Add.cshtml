@@ -1,0 +1,27 @@
+﻿@model BroadcastMessageViewModel
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-header">
+            <p class="text-muted mb-0">Add New Product.</p>
+        </div><!--end card-header-->
+        <div class="card-body">
+            <form enctype="multipart/form-data" asp-controller="Broadcast" asp-action="Add" method="POST">
+                <div class="form-group">
+                    <label asp-for="Message">Pls enter a message:</label>
+                    <input asp-for="Message" type="text" class="form-control" id="productName" placeholder="Enter product name">
+                    <span asp-validation-for="Message" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                </div>
+
+            </form>
+        </div><!--end card-body-->
+    </div><!--end card-->
+</div>
+
+

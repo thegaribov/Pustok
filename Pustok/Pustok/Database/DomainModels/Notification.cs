@@ -12,5 +12,8 @@ public class Notification : IEntity
     public User User { get; set; }
     public int UserId { get; set; }
 
+    public BroadcastMessage BroadcastMessage { get; set; }
+    public int? BroadcastMessageId { get; set; }
+
     public DateTime CreatedAt { get; set; }
 }

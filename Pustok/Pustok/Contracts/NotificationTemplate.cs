@@ -15,7 +15,11 @@ public class NotificationTemplate
             public const string TITLE = "Your order's status updated";
             public const string CONTENT = $"Your order #{NotificationTemplateKeyword.TRACKING_CODE} status updated to {NotificationTemplateKeyword.ORDER_STATUS_NAME}";
         }
+    }
 
+    public class Broadcast
+    {
+        public const string TITLE = "General notification";
     }
 }
 

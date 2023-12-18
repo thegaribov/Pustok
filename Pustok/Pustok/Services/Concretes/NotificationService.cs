@@ -9,6 +9,7 @@ using Pustok.Areas.Admin.ViewModels.Notification;
 using Microsoft.AspNetCore.SignalR;
 using Pustok.Hubs;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Pustok.Services.Concretes;
 
@@ -96,9 +97,42 @@ public class NotificationService : INotificationService
         }
     }
 
+    public async Task SendBroadcastNotifications(BroadcastMessage broadcastMessage)
+    {
+        var model = new NotificationViewModel
+        {
+            Title = NotificationTemplate.Broadcast.TITLE,
+            Content = broadcastMessage.Message,
+            CreatedAt = broadcastMessage.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+        };
+
+        await _alertHubContext.Clients
+            .All
+            .SendAsync("ReceiveAlertMessage", model);
+    }
+
     public async Task SendNotificationAsync(Notification notification)
     {
         await SendNotificationsAsync(new List<Notification> { notification });
+    }
+
+    public List<Notification> CreateNotificationsForBroadcasting(BroadcastMessage broadcastMessage)
+    {
+        var users = _pustokDbContext.Users.ToList();
+
+        var notifications = users
+            .Select(u => new Notification
+            {
+                User = u,
+                Title = NotificationTemplate.Broadcast.TITLE,
+                Content = broadcastMessage.Message,
+                BroadcastMessage = broadcastMessage,
+                CreatedAt = DateTime.UtcNow
+            }).ToList();
+
+        _pustokDbContext.Notifications.AddRange(notifications);
+
+        return notifications;
     }
 }
 

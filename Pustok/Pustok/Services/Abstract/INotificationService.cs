@@ -11,4 +11,6 @@ public interface INotificationService
 
     Task SendNotificationsAsync(List<Notification> notifications);
     Task SendNotificationAsync(Notification notification);
+    List<Notification> CreateNotificationsForBroadcasting(BroadcastMessage broadcastMessage);
+    Task SendBroadcastNotifications(BroadcastMessage broadcastMessage);
 }
